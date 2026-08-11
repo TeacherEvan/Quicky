@@ -36,6 +36,7 @@ class AppLocalizations {
       'bankingTile': 'Banking',
       'weatherTile': 'Weather',
       'settingsTile': 'Settings',
+      'costQuestion': 'How much does this cost?',
     },
     'th': {
       'appTitle': 'Quicky',
@@ -48,6 +49,7 @@ class AppLocalizations {
       'bankingTile': 'ธนาคาร',
       'weatherTile': 'สภาพอากาศ',
       'settingsTile': 'ตั้งค่า',
+      'costQuestion': 'สิ่งนี้ราคาเท่าไหร่?',
     },
   };
 
