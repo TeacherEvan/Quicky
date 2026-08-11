@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 
+import 'package:quicky/features/attractions/attractions_page.dart';
 import 'package:quicky/features/bathroom/bathroom_page.dart';
 import 'package:quicky/features/cost/cost_page.dart';
 import 'package:quicky/features/dashboard/dashboard_page.dart';
@@ -29,6 +30,10 @@ final List<RouteBase> appRoutes = <RouteBase>[
   GoRoute(
     path: Routes.splash,
     builder: (context, state) => const SplashPage(),
+  ),
+  GoRoute(
+    path: Routes.attractions,
+    builder: (context, state) => const AttractionsPage(),
   ),
   GoRoute(
     path: Routes.bathroom,
