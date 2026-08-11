@@ -94,16 +94,21 @@ Center = Settings button (circular, larger).
 ```
 
 ### App Launchers (URL Schemes)
-| App | Android Intent | iOS URL Scheme |
-|---|---|---|
-| BOLT | `intent://ride#Intent;package=com.bolt.app;end` | `boltd://` |
-| SCB Easy | `scb://` | `scbeasy://` |
-| K PLUS (KBank) | `kbank://` | `kplus://` |
-| Bualuang mBanking | `bbl://` | `bualuang://` |
-| Krungthai | `ktb://` | `ktb://` |
-| TTB | `ttb://` | `ttb://` |
 
-Fallback: `https://play.google.com/store/apps/details?id=<package>` / App Store.
+> **Deep-link caveat (verified 2026-08-11):** Thai banking / cab apps do NOT publish official URL schemes.
+> Scheme values are community-reported and MUST be verified on-device at implementation time.
+> The **Android package id** column is verified against the Play Store and is the reliable fallback target.
+
+| App | Android package (verified) | Scheme (community — verify on-device) | iOS (community) |
+|---|---|---|---|
+| BOLT | `ee.mtakso.client` | `boltd://` | `boltd://` |
+| SCB Easy | `com.scb.phone` | `scb://` | `scbeasy://` |
+| K PLUS (KBank) | `com.kasikorn.retail.mbanking.wap` | `kbank://` | `kplus://` |
+| Bualuang mBanking (BBL) | `com.bbl.mobilebanking` | `bbl://` | `bualuang://` |
+| Krungthai NEXT (KTB) | `ktbcs.netbank` | `ktb://` | `ktb://` |
+| TTB touch | `com.TMBTOUCH.PRODUCTION` | `ttb://` | `ttb://` |
+
+**Launcher contract:** installed-app-only (check package presence; if absent show "Not installed", do NOT link to store), background-resident launch (Flag `NEW_TASK` + `TASK_ON_HOME` on Android; iOS scheme keeps Quicky in recents), permission-gated (`QUERY_ALL_PACKAGES` / `<queries>` on Android 11+). Schemes are unverified community values; the Android package id is the authoritative installed-check target.
 
 ### Settings Persistence
 | Setting | Storage |

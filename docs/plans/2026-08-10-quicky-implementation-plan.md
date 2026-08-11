@@ -1,24 +1,102 @@
 # Quicky 🏃 — Flutter App Implementation Plan
 
-> **For Hermes:** Use subagent-driven-development skill to implement this plan task-by-task.
+> **For Hermes:** Execute task-by-task (subagent or inline). Greenfield app — no remote feature flag.
 
 **Goal:** Build a production-ready Flutter (iOS/Android) app "Quicky" — an octagon-dashboard shortcut utility with 8 tiles: Cost Translator (camera + Thai), Location Finder (camera + Thai + load image), Bathroom Toggle, Attractions (distance filters), Day Counter, Bolt Launcher, Banking Launcher, Weather — plus central Settings with proactive best-practice configs.
 
-**Architecture:** Clean Architecture + Riverpod state management. Each tile is an independent feature module. Platform channels for native intents (camera, app launchers). Local-first with optional cloud sync. Offline-capable by default.
+**Architecture:** Clean Architecture + Riverpod state management. Each tile is an independent feature module. Platform channels / `url_launcher` for native intents (camera, app launchers). Local-first with optional cloud sync. Offline-capable by default.
 
 **Tech Stack:**
 - Flutter 3.24+ (Dart 3.5+)
 - Riverpod 2.5+ (state)
 - GoRouter 14+ (navigation)
-- flutter_camera 0.11+ (camera)
+- camera ^0.11.0 (native preview/capture)
 - image_picker 1.1+ (gallery)
 - geolocator 12+ / geocoding 3+ (location)
 - weather_openweathermap or similar (weather)
 - shared_preferences 2.3+ (local persistence)
+- flutter_secure_storage 9+ (API keys / tokens)
 - url_launcher 6.2+ (external app launch)
+- installed_apps 1.6+ (enumerate + launch installed apps; Android 11+ needs QUERY_ALL_PACKAGES)
+- permission_handler 11+ (camera / location runtime grants)
 - flutter_localizations + intl (Thai/English i18n)
 - very_good_analysis (lint)
 - Mocktail (unit tests), integration_test (e2e)
+
+**Effort:** ~3 weeks | **Surfaces touched:** 1 app (`lib/`) | **New tables:** 0 (local-first) | **Feature flag:** n/a (standalone app; gated by route + build flavor)
+
+---
+
+## Milestone Timeline
+
+Ship in slices; each milestone compiles and is independently reviewable. Nothing is shipped to users until Milestone 4's release build.
+
+### Milestone 1: Scaffold & Core (Tasks 0–1)
+Flutter project, CI, routing, theme, i18n, shared octagon widgets. No features user-visible yet.
+- `pubspec.yaml`, `analysis_options.yaml`, CI, `lib/main.dart`, `core/*`, `shared/widgets/*`
+
+### Milestone 2: Dashboard & Splash (Task 2)
+Octagon dashboard renders 8 tiles; splash gates entry.
+- `features/splash`, `features/dashboard`
+
+### Milestone 3: Feature Tiles (Tasks 3–9)
+Each tile independently compilable; camera / location / launcher / weather behind permission + settings.
+- `cost`, `location`, `bathroom`, `attractions`, `counter`, `bolt`, `banking`, `weather`
+
+### Milestone 4: Settings Hub & Verification (Tasks 10–11)
+Central settings persists all prefs; full unit/widget/integration tests, a11y pass, release build.
+
+---
+
+## Data Flow
+
+Solid `─►` = request/response; dashed `╌►` = async external API or OS intent.
+
+### Tile → Result
+```
+User tap OctagonTile
+   │
+   ▼
+GoRouter push /<route>
+   │
+   ▼
+<Feature>Page (reads Riverpod controller)
+   ├─ camera/gallery ─► image ─► (optional) Thai phrase overlay
+   ├─ location ─╌► geolocator ─╌► places/weather API (key from settings)
+   └─ launcher ─╌► url_launcher scheme/intent ─╌► external app
+   │
+   ▼
+Result card / state ─► shared_preferences (secure storage for keys)
+```
+
+### Settings persistence
+```
+SettingsPage ─► settings_controller (Riverpod)
+   ├─ simple prefs ─► shared_preferences
+   └─ secrets (weather key, bank toggles) ─► flutter_secure_storage
+```
+
+---
+
+## Mockups
+
+### A · Octagon dashboard (8 tiles @ 45°, center = Settings)
+```
+            [ Cost? ]
+   [Location?]       [Bathrooms]
+[Bathroom]   ( ⚙ Settings )   [Attract]
+  [DayCnt]       [Weather]
+   [ BOLT ]         [Banking]
+```
+### B · Tile result card (Cost Translator)
+```
+┌──────────────────────────────┐
+│ [captured image thumbnail]   │
+│ TH: สิ่งนี้ราคาเท่าไหร่?        │
+│ EN: How much does this cost? │
+│                 [ Copy ]     │
+└──────────────────────────────┘
+```
 
 ---
 
@@ -199,16 +277,53 @@ const tiles = [
 ### Task 8.1: Bolt launcher
 **Files:**
 - Create: `lib/features/bolt/bolt_page.dart` (single button "Launch BOLT")
-- Create: `lib/features/bolt/bolt_service.dart` (url_launcher: `boltd://` or Android intent `com.bolt.app` / iOS URL scheme)
+- Create: `lib/features/bolt/bolt_service.dart` (installed-app check via `installed_apps`; launch verified package `ee.mtakso.client` with background-resident intent; show "Not installed" if absent)
 
 ### Task 8.2: Banking launcher
 **Files:**
 - Create: `lib/features/banking/banking_page.dart` (list of known Thai banks with icons → launch)
-- Create: `lib/features/banking/banking_service.dart` (map: SCB → `scb://`, KBank → `kbank://`, etc.)
+- Create: `lib/features/banking/banking_service.dart` (installed-app check via `installed_apps`; per-bank verified package map; launch only if present with background-resident intent; "Not installed" state otherwise)
+
+> **Launcher contract (verified 2026-08-11 + user clarification):**
+> Users are international. Quicky must only trigger the *already-installed* designated
+> banking / ride app, hand off to it, and keep Quicky resident in the background (not
+> finish/close). It must request the relevant permission (e.g. `QUERY_ALL_PACKAGES` on
+> Android 11+ to enumerate installed apps) and only offer to launch apps that are present.
+>
+> - **Installed-only:** at runtime, check the target package is installed. If absent,
+>   show "Not installed" and do NOT deep-link to the store (per user: only trigger the
+>   app that already exists). No forced install.
+> - **Background-resident launch:** use Android `Intent` with `FLAG_ACTIVITY_NEW_TASK`
+>   + `Intent.FLAG_ACTIVITY_TASK_ON_HOME` so the external app opens while Quicky stays
+>   in the recents stack; on iOS `launchUrl` of the scheme keeps Quicky in the background
+>   by default. Do not call `SystemNavigator.pop()` / `exit(0)`.
+> - **Permission-gated:** Android 11+ needs `QUERY_ALL_PACKAGES` (or fine-grained
+>   `<queries>` entries) to see other apps. Prompt / explain the need in Settings.
+> - **Schemes are unverified:** banks/cab apps publish no official URL schemes; the
+>   scheme column is community-reported and MUST be verified on-device. The **Android
+>   package id** (Play Store–verified) is the authoritative installed-check target.
+
+**Verified Android package ids (Play Store, 2026-08-11):**
+
+| App | Android package (verified) | Scheme (community — verify on-device) |
+|---|---|---|
+| BOLT | `ee.mtakso.client` | `boltd://` |
+| SCB EASY | `com.scb.phone` | `scb://` / `scbeasy://` |
+| K PLUS (KBank) | `com.kasikorn.retail.mbanking.wap` | `kbank://` / `kplus://` |
+| Bualuang mBanking (BBL) | `com.bbl.mobilebanking` | `bbl://` |
+| Krungthai NEXT (KTB) | `ktbcs.netbank` | `ktb://` |
+| TTB touch | `com.TMBTOUCH.PRODUCTION` | `ttb://` |
+
+**Implementation approach:**
+- Android: use `url_launcher`'s Android `intent://` with `package=<verified id>` so the
+  OS opens that specific installed app; `canLaunchUrl` / `Intent.resolveActivity` confirms
+  presence first.
+- iOS: attempt the community scheme; if `canLaunchUrl` is false, show "Not installed".
 
 ### Task 8.3: Fallback
 **Files:**
-- If scheme fails → open Play Store / App Store page
+- If the designated app is NOT installed → show inline "Not installed" state; do NOT
+  navigate to the Play Store / App Store (per user requirement: only trigger existing apps).
 
 ---
 
@@ -273,6 +388,24 @@ const tiles = [
 flutter build apk --release
 flutter build ios --release
 ```
+
+---
+
+## Risk Table
+
+| Risk | Likelihood | Impact | Mitigation |
+|------|-----------|--------|------------|
+| Deep-link scheme wrong / app won't open | High | Medium | Use verified Play Store package id for the `intent://...package=` target; verify schemes on-device before release |
+| Target app not installed → launch fails | Medium | Low | Installed-only: check package presence first; show "Not installed" state, never deep-link to store |
+| Android 11+ can't see installed apps (`QUERY_ALL_PACKAGES` denied) | Medium | Medium | Request the permission / use fine-grained `<queries>`; if denied, offer manual bank selection in Settings |
+| Background app killed when handing off | Low | Medium | Use `FLAG_ACTIVITY_NEW_TASK` + `TASK_ON_HOME`; never call `SystemNavigator.pop()` / `exit(0)`; verify via recents stack on device |
+| Installed-app-detection package name unverified | Medium | Medium | Use a verified package (e.g. `installed_apps` / `device_apps`) — confirm current pub.dev name at implementation time; do not hardcode until verified |
+| Camera / location permission denied | Medium | Medium | Graceful empty state; re-prompt via `permission_handler`; document in Settings |
+| iOS custom URL scheme blocked (no universal link) | Medium | Medium | Attempt scheme; if `canLaunchUrl` false show "Not installed"; note in release checklist |
+| Weather / Places API key missing | Medium | Low | Use mock service until key entered in Settings; no crash |
+| Thai font not bundled → tofu glyphs | Low | Medium | Include Thai font in `pubspec.yaml` fonts; render test on device |
+| `camera` + `image_picker` both requested → redundant capture paths | Low | Low | Prefer `camera` for live preview; `image_picker` only for gallery |
+| Release build fails code signing (iOS) | Medium | High | Build `--no-codesign` in CI; signing only on maintained profile |
 
 ---
 
