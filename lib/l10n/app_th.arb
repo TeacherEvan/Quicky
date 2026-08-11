@@ -1,0 +1,12 @@
+{
+  "appTitle": "Quicky",
+  "costTile": "ราคา",
+  "locationTile": "ตำแหน่ง",
+  "bathroomTile": "ห้องน้ำ",
+  "attractionsTile": "สถานที่น่าสนใจ",
+  "counterTile": "นับวัน",
+  "boltTile": "Bolt",
+  "bankingTile": "ธนาคาร",
+  "weatherTile": "สภาพอากาศ",
+  "settingsTile": "ตั้งค่า"
+}

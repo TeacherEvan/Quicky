@@ -1,0 +1,12 @@
+{
+  "appTitle": "Quicky",
+  "costTile": "Cost",
+  "locationTile": "Location",
+  "bathroomTile": "Bathroom",
+  "attractionsTile": "Attractions",
+  "counterTile": "Day Counter",
+  "boltTile": "Bolt",
+  "bankingTile": "Banking",
+  "weatherTile": "Weather",
+  "settingsTile": "Settings"
+}
