@@ -31,7 +31,8 @@
 lib/
 ├── main.dart                    # ProviderScope + GoRouter
 ├── core/
-│   ├── router/app_router.dart   # All routes
+│   ├── router/app_router.dart   # GoRouter instance (central, do not edit per-feature)
+│   ├── router/routes.dart       # appRoutes registry — features append here
 │   ├── theme/app_theme.dart     # Light/dark, colors
 │   ├── l10n/                    # ARB files (en, th)
 │   └── utils/                   # Extensions, helpers
@@ -138,6 +139,8 @@ flutter test --coverage
 # Build
 flutter build apk --release
 flutter build ios --release --no-codesign
+# Linux desktop (needs libsecret-1-dev; project path must NOT contain ")
+flutter build linux --release
 ```
 
 ---

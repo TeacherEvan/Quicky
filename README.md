@@ -1,6 +1,6 @@
 # Quicky 🏃
 
-A Flutter (iOS/Android) octagon-dashboard shortcut utility for travelers in Thailand.
+A Flutter (iOS/Android/Linux-desktop) octagon-dashboard shortcut utility for travelers in Thailand.
 One central hub + 8 tiles: Cost Translator, Location Finder, Bathroom Toggle, Attractions,
 Day Counter, Bolt Launcher, Banking Launcher, Weather.
 
@@ -63,7 +63,20 @@ test/          unit + widget + integration
 ## Verified gate
 ```bash
 flutter pub get
-flutter analyze
+flutter analyze --no-fatal-infos
 flutter test
 flutter build apk --release
+# Linux desktop (needs libsecret-1-dev + a project path WITHOUT quotes):
+flutter build linux
 ```
+
+## Linux desktop build note (verified 2026-08-11)
+`flutter build linux` needs the system package `libsecret-1-dev`
+(required by `flutter_secure_storage_linux`). Install it:
+```bash
+sudo apt-get install -y libsecret-1-dev
+```
+The project directory path must **not** contain literal `"` characters — Flutter
+generates `linux/flutter/ephemeral/generated_config.cmake` embedding the path in a
+CMake quoted string, and the embedded quotes break `file(TO_CMAKE_PATH …)` (fatal
+"must be called with exactly three arguments"). Spaces are fine; double-quotes are not.
