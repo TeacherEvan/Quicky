@@ -36,7 +36,10 @@ class CostResultCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(thaiPhrase, style: Theme.of(context).textTheme.titleMedium),
+                  Text(
+                    thaiPhrase,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
                   const SizedBox(height: 4),
                   Text(
                     l10n.translate('costQuestion'),

@@ -28,26 +28,26 @@ class _WeatherPageState extends ConsumerState<WeatherPage> {
       body: state.loading
           ? const Center(child: CircularProgressIndicator())
           : state.snapshot == null
-              ? const Center(child: Text('No data'))
-              : Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    children: [
-                      Text(
-                        '${state.snapshot!.tempC.round()}°C',
-                        style: Theme.of(context).textTheme.displayLarge,
-                      ),
-                      Text(state.snapshot!.condition),
-                      const SizedBox(height: 24),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: state.snapshot!.forecast
-                            .map((f) => Chip(label: Text(f)))
-                            .toList(),
-                      ),
-                    ],
+          ? const Center(child: Text('No data'))
+          : Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                children: [
+                  Text(
+                    '${state.snapshot!.tempC.round()}°C',
+                    style: Theme.of(context).textTheme.displayLarge,
                   ),
-                ),
+                  Text(state.snapshot!.condition),
+                  const SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: state.snapshot!.forecast
+                        .map((f) => Chip(label: Text(f)))
+                        .toList(),
+                  ),
+                ],
+              ),
+            ),
     );
   }
 }

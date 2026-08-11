@@ -9,9 +9,24 @@ class PlacesService {
   Future<List<Attraction>> fetchNearby(double radiusKm) async {
     if (apiKey == null) {
       return [
-        Attraction(name: 'Mock Cafe', distanceKm: radiusKm * 0.2, type: 'cafe', openNow: true),
-        Attraction(name: 'Mock Temple', distanceKm: radiusKm * 0.5, type: 'temple', openNow: true),
-        Attraction(name: 'Mock Market', distanceKm: radiusKm * 0.8, type: 'market', openNow: false),
+        Attraction(
+          name: 'Mock Cafe',
+          distanceKm: radiusKm * 0.2,
+          type: 'cafe',
+          openNow: true,
+        ),
+        Attraction(
+          name: 'Mock Temple',
+          distanceKm: radiusKm * 0.5,
+          type: 'temple',
+          openNow: true,
+        ),
+        Attraction(
+          name: 'Mock Market',
+          distanceKm: radiusKm * 0.8,
+          type: 'market',
+          openNow: false,
+        ),
       ];
     }
     return const [];

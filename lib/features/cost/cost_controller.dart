@@ -6,8 +6,8 @@ import 'package:quicky/shared/camera_state.dart';
 /// integration; for now the phrase is a static helper so the UI is complete.)
 final costControllerProvider =
     StateNotifierProvider<CostController, CameraCaptureState>(
-  (ref) => CostController(),
-);
+      (ref) => CostController(),
+    );
 
 class CostController extends StateNotifier<CameraCaptureState> {
   CostController() : super(const CameraCaptureState());

@@ -15,10 +15,7 @@ class AppLocalizations {
     delegate,
   ];
 
-  static const List<Locale> supportedLocales = [
-    Locale('en'),
-    Locale('th'),
-  ];
+  static const List<Locale> supportedLocales = [Locale('en'), Locale('th')];
 
   static AppLocalizations of(BuildContext context) {
     return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
@@ -72,8 +69,9 @@ class _AppLocalizationsDelegate
   const _AppLocalizationsDelegate();
 
   @override
-  bool isSupported(Locale locale) => AppLocalizations.supportedLocales
-      .any((l) => l.languageCode == locale.languageCode);
+  bool isSupported(Locale locale) => AppLocalizations.supportedLocales.any(
+    (l) => l.languageCode == locale.languageCode,
+  );
 
   @override
   Future<AppLocalizations> load(Locale locale) async {

@@ -5,8 +5,8 @@ import 'services/places_service.dart';
 /// Controller for Attractions: selected radius + loaded places list.
 final attractionsControllerProvider =
     StateNotifierProvider<AttractionsController, AttractionsState>(
-  (ref) => AttractionsController(),
-);
+      (ref) => AttractionsController(),
+    );
 
 class AttractionsState {
   const AttractionsState({

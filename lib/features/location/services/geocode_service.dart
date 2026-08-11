@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 /// Reverse-geocode service. MOCK by default; real provider (Google Places /
 /// OSM / Foursquare) is wired in Settings (Task 10) with an API key.
 class GeocodeService {

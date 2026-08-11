@@ -14,7 +14,9 @@ class AttractionCard extends StatelessWidget {
       child: ListTile(
         leading: const Icon(Icons.place),
         title: Text(attraction.name),
-        subtitle: Text('${attraction.distanceKm.toStringAsFixed(1)} km · ${attraction.type}'),
+        subtitle: Text(
+          '${attraction.distanceKm.toStringAsFixed(1)} km · ${attraction.type}',
+        ),
         trailing: Chip(
           label: Text(attraction.openNow ? 'Open' : 'Closed'),
           backgroundColor: attraction.openNow

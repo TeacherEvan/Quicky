@@ -21,6 +21,7 @@ class DashboardPage extends ConsumerWidget {
           (t) => OctagonTile(
             icon: t.icon,
             label: _label(l10n, t.labelKey),
+            semanticsLabel: _label(l10n, t.labelKey),
             onTap: () => context.push(t.route),
           ),
         )
@@ -31,6 +32,7 @@ class DashboardPage extends ConsumerWidget {
         center: OctagonTile(
           icon: Icons.settings,
           label: l10n.settingsTile,
+          semanticsLabel: l10n.settingsTile,
           onTap: () => context.push(Routes.settings),
           color: Theme.of(context).colorScheme.secondaryContainer,
         ),

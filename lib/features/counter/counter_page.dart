@@ -61,10 +61,7 @@ class _CounterPageState extends ConsumerState<CounterPage> {
             ),
             const Spacer(),
             if (state.target != null)
-              Text(
-                '$days',
-                style: Theme.of(context).textTheme.displayLarge,
-              )
+              Text('$days', style: Theme.of(context).textTheme.displayLarge)
             else
               const Text('No countdown set'),
             const Spacer(),

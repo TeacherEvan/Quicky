@@ -43,7 +43,7 @@ dependencies:
 
   # Location
   geolocator: ^12.0.0
-  geocoding: ^3.0.0
+  geocoding: ^5.0.0
 
   # Persistence
   shared_preferences: ^2.3.0
@@ -68,10 +68,12 @@ dev_dependencies:
     sdk: flutter
 
   # Lint set (replaces flutter_lints per plan)
-  very_good_analysis: ^6.0.0
   mocktail: ^1.0.0
-  integration_test:
-    sdk: flutter
+  very_good_analysis: ^6.0.0
+
+  # integration_test: deferred — only needed when integration_test/ suite exists
+  # (plan Task 11.3). Its generated registrar breaks release Java compile when
+  # no integration test target is present; re-add when the e2e suite is built.
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -32,10 +32,7 @@ class Routes {
 /// Append-only route registry. Feature jobs (J4–J13) add their `RouteBase`
 /// entries HERE, never inside app_router.dart, to respect directory scope locks.
 final List<RouteBase> appRoutes = <RouteBase>[
-  GoRoute(
-    path: Routes.splash,
-    builder: (context, state) => const SplashPage(),
-  ),
+  GoRoute(path: Routes.splash, builder: (context, state) => const SplashPage()),
   GoRoute(
     path: Routes.settings,
     builder: (context, state) => const SettingsPage(),
@@ -48,10 +45,7 @@ final List<RouteBase> appRoutes = <RouteBase>[
     path: Routes.banking,
     builder: (context, state) => const BankingPage(),
   ),
-  GoRoute(
-    path: Routes.bolt,
-    builder: (context, state) => const BoltPage(),
-  ),
+  GoRoute(path: Routes.bolt, builder: (context, state) => const BoltPage()),
   GoRoute(
     path: Routes.counter,
     builder: (context, state) => const CounterPage(),
@@ -68,10 +62,7 @@ final List<RouteBase> appRoutes = <RouteBase>[
     path: Routes.location,
     builder: (context, state) => const LocationPage(),
   ),
-  GoRoute(
-    path: Routes.cost,
-    builder: (context, state) => const CostPage(),
-  ),
+  GoRoute(path: Routes.cost, builder: (context, state) => const CostPage()),
   GoRoute(
     path: Routes.home,
     builder: (context, state) => const DashboardPage(),

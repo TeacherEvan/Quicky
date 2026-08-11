@@ -9,6 +9,7 @@ class OctagonTile extends StatelessWidget {
     required this.onTap,
     this.size = 72,
     this.color,
+    this.semanticsLabel,
   });
 
   final IconData icon;
@@ -17,42 +18,58 @@ class OctagonTile extends StatelessWidget {
   final double size;
   final Color? color;
 
+  /// Optional screen-reader label; defaults to [label] when null (Task 11.4 a11y).
+  final String? semanticsLabel;
+
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final tileColor = color ?? scheme.primaryContainer;
+    final effectiveLabel = semanticsLabel ?? label;
     return Material(
       color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        customBorder: const _OctagonBorder(),
-        borderRadius: BorderRadius.circular(12),
-        child: SizedBox(
-          width: size,
-          height: size,
-          child: ClipPath(
-            clipper: const _OctagonClipper(),
-            child: Container(
-              color: tileColor,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(icon, size: size * 0.34, color: scheme.onPrimaryContainer),
-                  const SizedBox(height: 4),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    child: Text(
-                      label,
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: size * 0.13,
-                        color: scheme.onPrimaryContainer,
+      child: Semantics(
+        button: true,
+        label: effectiveLabel,
+        child: InkWell(
+          onTap: onTap,
+          customBorder: const _OctagonBorder(),
+          borderRadius: BorderRadius.circular(12),
+          child: SizedBox(
+            width: size,
+            height: size,
+            child: ClipPath(
+              clipper: const _OctagonClipper(),
+              child: Container(
+                color: tileColor,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      icon,
+                      size: size * 0.34,
+                      color: scheme.onPrimaryContainer,
+                    ),
+                    const SizedBox(height: 4),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      // Exclude the inner Text from the semantics tree so the
+                      // tile's label isn't announced twice (Text + Semantics).
+                      child: ExcludeSemantics(
+                        child: Text(
+                          label,
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: size * 0.13,
+                            color: scheme.onPrimaryContainer,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

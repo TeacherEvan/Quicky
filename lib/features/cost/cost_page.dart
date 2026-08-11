@@ -37,9 +37,9 @@ class _CostPageState extends ConsumerState<CostPage> {
     if (_controller == null || !_controller!.value.isInitialized) return;
     final file = await _controller!.takePicture();
     ref.read(costControllerProvider.notifier).setImage(file.path);
-    ref.read(costControllerProvider.notifier).setPhrase(
-          AppLocalizations.of(context).translate('costQuestion'),
-        );
+    ref
+        .read(costControllerProvider.notifier)
+        .setPhrase(AppLocalizations.of(context).translate('costQuestion'));
   }
 
   @override

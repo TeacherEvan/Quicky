@@ -5,7 +5,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:quicky/core/l10n/app_localizations.dart';
 import 'package:quicky/features/location/location_controller.dart';
 import 'package:quicky/features/location/services/geocode_service.dart';
-import 'package:quicky/shared/camera_state.dart';
 
 /// Location Finder page: camera or gallery image, then a Thai place label.
 class LocationPage extends ConsumerStatefulWidget {

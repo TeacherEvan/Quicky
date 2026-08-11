@@ -33,8 +33,8 @@ class SettingsState {
 
 final settingsControllerProvider =
     StateNotifierProvider<SettingsController, SettingsState>((ref) {
-  return SettingsController();
-});
+      return SettingsController();
+    });
 
 class SettingsController extends StateNotifier<SettingsState> {
   SettingsController() : super(const SettingsState()) {

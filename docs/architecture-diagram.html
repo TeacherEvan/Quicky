@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Quicky — Architecture Overview</title>
+<style>
+  html, body { margin: 0; background: #0d1117; color: #c9d1d9; font-family: -apple-system, Segoe UI, Roboto, sans-serif; }
+  .wrap { display: flex; justify-content: center; padding: 16px; }
+  svg { max-width: 100%; height: auto; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<svg viewBox="0 0 1480 1000" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, Segoe UI, Roboto, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#8b949e" />
+    </marker>
+  </defs>
+
+  <!-- background -->
+  <rect x="0" y="0" width="1480" height="1000" fill="#0d1117" />
+
+  <!-- title -->
+  <text x="40" y="34" fill="#e6edf3" font-size="20" font-weight="700">Quicky 🏃 — Architecture Overview</text>
+  <text x="40" y="54" fill="#8b949e" font-size="13">Flutter 3.24+ · Riverpod · GoRouter · Clean / Feature-First · Local-first</text>
+
+  <!-- ===== TIER 1: USER ===== -->
+  <rect x="540" y="62" width="200" height="46" rx="8" fill="#0d2616" stroke="#39d353" stroke-width="1.5" />
+  <text x="640" y="90" fill="#c9d1d9" font-size="15" text-anchor="middle">User (tap tile)</text>
+
+  <!-- ===== TIER 2: DASHBOARD ===== -->
+  <rect x="340" y="140" width="600" height="64" rx="10" fill="#0d1f33" stroke="#58a6ff" stroke-width="1.5" />
+  <text x="640" y="166" fill="#e6edf3" font-size="15" font-weight="600" text-anchor="middle">Octagon Dashboard — 8 Tiles</text>
+  <text x="640" y="186" fill="#8b949e" font-size="12" text-anchor="middle">center = Settings hub · GoRouter declarative routes</text>
+
+  <!-- ===== TIER 3: FEATURE MODULES (container) ===== -->
+  <rect x="42" y="248" width="1196" height="186" rx="14" fill="#1a1228" stroke="#bc8cff" stroke-width="1.5" />
+  <text x="640" y="274" fill="#e6edf3" font-size="14" font-weight="600" text-anchor="middle">Feature Modules (feature-first) — each: Page + Controller + Services / Widgets / Models</text>
+
+  <!-- 8 tiles -->
+  <!-- Cost -->
+  <rect x="55" y="300" width="135" height="104" rx="10" fill="#211a33" stroke="#bc8cff" stroke-width="1.2" />
+  <text x="122.5" y="344" fill="#e6edf3" font-size="15" font-weight="600" text-anchor="middle">Cost</text>
+  <text x="122.5" y="364" fill="#8b949e" font-size="11" text-anchor="middle">Translator</text>
+  <!-- Location -->
+  <rect x="203" y="300" width="135" height="104" rx="10" fill="#211a33" stroke="#bc8cff" stroke-width="1.2" />
+  <text x="270.5" y="344" fill="#e6edf3" font-size="15" font-weight="600" text-anchor="middle">Location</text>
+  <text x="270.5" y="364" fill="#8b949e" font-size="11" text-anchor="middle">Finder</text>
+  <!-- Bathroom -->
+  <rect x="351" y="300" width="135" height="104" rx="10" fill="#211a33" stroke="#bc8cff" stroke-width="1.2" />
+  <text x="418.5" y="344" fill="#e6edf3" font-size="15" font-weight="600" text-anchor="middle">Bathroom</text>
+  <text x="418.5" y="364" fill="#8b949e" font-size="11" text-anchor="middle">Toggle</text>
+  <!-- Attractions -->
+  <rect x="499" y="300" width="135" height="104" rx="10" fill="#211a33" stroke="#bc8cff" stroke-width="1.2" />
+  <text x="566.5" y="344" fill="#e6edf3" font-size="15" font-weight="600" text-anchor="middle">Attractions</text>
+  <text x="566.5" y="364" fill="#8b949e" font-size="11" text-anchor="middle">Nearby</text>
+  <!-- Counter -->
+  <rect x="647" y="300" width="135" height="104" rx="10" fill="#211a33" stroke="#bc8cff" stroke-width="1.2" />
+  <text x="714.5" y="344" fill="#e6edf3" font-size="15" font-weight="600" text-anchor="middle">Counter</text>
+  <text x="714.5" y="364" fill="#8b949e" font-size="11" text-anchor="middle">Days</text>
+  <!-- Bolt -->
+  <rect x="795" y="300" width="135" height="104" rx="10" fill="#211a33" stroke="#bc8cff" stroke-width="1.2" />
+  <text x="862.5" y="344" fill="#e6edf3" font-size="15" font-weight="600" text-anchor="middle">Bolt</text>
+  <text x="862.5" y="364" fill="#8b949e" font-size="11" text-anchor="middle">Launch</text>
+  <!-- Banking -->
+  <rect x="943" y="300" width="135" height="104" rx="10" fill="#211a33" stroke="#bc8cff" stroke-width="1.2" />
+  <text x="1010.5" y="344" fill="#e6edf3" font-size="15" font-weight="600" text-anchor="middle">Banking</text>
+  <text x="1010.5" y="364" fill="#8b949e" font-size="11" text-anchor="middle">Launch</text>
+  <!-- Weather -->
+  <rect x="1091" y="300" width="135" height="104" rx="10" fill="#211a33" stroke="#bc8cff" stroke-width="1.2" />
+  <text x="1158.5" y="344" fill="#e6edf3" font-size="15" font-weight="600" text-anchor="middle">Weather</text>
+  <text x="1158.5" y="364" fill="#8b949e" font-size="11" text-anchor="middle">Now</text>
+
+  <!-- ===== TIER 4: CORE & SHARED ===== -->
+  <rect x="180" y="486" width="440" height="62" rx="10" fill="#2a1c0d" stroke="#f0883e" stroke-width="1.5" />
+  <text x="400" y="512" fill="#e6edf3" font-size="14" font-weight="600" text-anchor="middle">core/  router · theme</text>
+  <text x="400" y="532" fill="#8b949e" font-size="12" text-anchor="middle">l10n (en, th) · utils</text>
+
+  <rect x="660" y="486" width="440" height="62" rx="10" fill="#2a1c0d" stroke="#f0883e" stroke-width="1.5" />
+  <text x="880" y="512" fill="#e6edf3" font-size="14" font-weight="600" text-anchor="middle">shared/widgets</text>
+  <text x="880" y="532" fill="#8b949e" font-size="12" text-anchor="middle">OctagonTile · DashboardLayout · Splash</text>
+
+  <!-- ===== TIER 5: PLATFORM SERVICES ===== -->
+  <rect x="70" y="586" width="215" height="62" rx="10" fill="#0d2b2d" stroke="#56d4dd" stroke-width="1.5" />
+  <text x="177.5" y="622" fill="#e6edf3" font-size="13" text-anchor="middle">camera (0.11)</text>
+
+  <rect x="303" y="586" width="215" height="62" rx="10" fill="#0d2b2d" stroke="#56d4dd" stroke-width="1.5" />
+  <text x="410.5" y="622" fill="#e6edf3" font-size="13" text-anchor="middle">image_picker</text>
+
+  <rect x="536" y="586" width="215" height="62" rx="10" fill="#0d2b2d" stroke="#56d4dd" stroke-width="1.5" />
+  <text x="643.5" y="622" fill="#e6edf3" font-size="13" text-anchor="middle">geolocator + geocoding</text>
+
+  <rect x="769" y="586" width="215" height="62" rx="10" fill="#0d2b2d" stroke="#56d4dd" stroke-width="1.5" />
+  <text x="876.5" y="622" fill="#e6edf3" font-size="13" text-anchor="middle">url_launcher</text>
+
+  <rect x="1002" y="586" width="215" height="62" rx="10" fill="#0d2b2d" stroke="#56d4dd" stroke-width="1.5" />
+  <text x="1109.5" y="622" fill="#e6edf3" font-size="13" text-anchor="middle">permission_handler</text>
+
+  <!-- ===== TIER 6: EXTERNAL ===== -->
+  <rect x="160" y="708" width="300" height="62" rx="10" fill="#2a0f20" stroke="#db61a2" stroke-width="1.5" />
+  <text x="310" y="734" fill="#e6edf3" font-size="13" font-weight="600" text-anchor="middle">Places API</text>
+  <text x="310" y="754" fill="#8b949e" font-size="11" text-anchor="middle">OSM / Overpass (free)</text>
+
+  <rect x="490" y="708" width="300" height="62" rx="10" fill="#2a0f20" stroke="#db61a2" stroke-width="1.5" />
+  <text x="640" y="734" fill="#e6edf3" font-size="13" font-weight="600" text-anchor="middle">Weather API</text>
+  <text x="640" y="754" fill="#8b949e" font-size="11" text-anchor="middle">OpenWeather / WeatherAPI</text>
+
+  <rect x="820" y="708" width="300" height="62" rx="10" fill="#2a0f20" stroke="#db61a2" stroke-width="1.5" />
+  <text x="970" y="734" fill="#e6edf3" font-size="13" font-weight="600" text-anchor="middle">External Apps</text>
+  <text x="970" y="754" fill="#8b949e" font-size="11" text-anchor="middle">BOLT · Thai Banks (intent)</text>
+
+  <!-- ===== STORAGE COLUMN (right) ===== -->
+  <rect x="1300" y="320" width="150" height="66" rx="10" fill="#2a2410" stroke="#e3b341" stroke-width="1.5" />
+  <text x="1375" y="348" fill="#e6edf3" font-size="12" font-weight="600" text-anchor="middle">shared_</text>
+  <text x="1375" y="366" fill="#e6edf3" font-size="12" font-weight="600" text-anchor="middle">preferences</text>
+
+  <rect x="1300" y="420" width="150" height="66" rx="10" fill="#2a2410" stroke="#e3b341" stroke-width="1.5" />
+  <text x="1375" y="448" fill="#e6edf3" font-size="12" font-weight="600" text-anchor="middle">flutter_secure</text>
+  <text x="1375" y="466" fill="#e6edf3" font-size="12" font-weight="600" text-anchor="middle">_storage</text>
+
+  <!-- ===== ARROWS ===== -->
+  <!-- User -> Dashboard -->
+  <line x1="640" y1="108" x2="640" y2="140" stroke="#8b949e" stroke-width="2" marker-end="url(#arrow)" />
+  <!-- Dashboard -> Feature container -->
+  <line x1="640" y1="204" x2="640" y2="248" stroke="#8b949e" stroke-width="2" marker-end="url(#arrow)" />
+  <!-- Feature container -> Core -->
+  <line x1="400" y1="434" x2="400" y2="486" stroke="#8b949e" stroke-width="2" marker-end="url(#arrow)" />
+  <!-- Feature container -> Shared -->
+  <line x1="880" y1="434" x2="880" y2="486" stroke="#8b949e" stroke-width="2" marker-end="url(#arrow)" />
+  <!-- Feature container -> Platform (through center gap) -->
+  <line x1="640" y1="434" x2="640" y2="586" stroke="#8b949e" stroke-width="2" marker-end="url(#arrow)" />
+  <!-- Feature container -> Storage (prefs) -->
+  <line x1="1238" y1="345" x2="1300" y2="353" stroke="#8b949e" stroke-width="2" marker-end="url(#arrow)" />
+  <!-- Feature container -> Storage (secrets) -->
+  <line x1="1238" y1="455" x2="1300" y2="453" stroke="#8b949e" stroke-width="2" marker-end="url(#arrow)" />
+  <!-- Platform -> External (REST) -->
+  <line x1="640" y1="648" x2="640" y2="708" stroke="#8b949e" stroke-width="2" marker-end="url(#arrow)" />
+  <!-- Platform (url_launcher) -> External Apps -->
+  <line x1="970" y1="648" x2="970" y2="708" stroke="#8b949e" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- arrow labels -->
+  <text x="652" y="160" fill="#8b949e" font-size="11">GoRouter routes</text>
+  <text x="900" y="462" fill="#8b949e" font-size="11">imports</text>
+  <text x="652" y="520" fill="#8b949e" font-size="11">camera / location / launch</text>
+  <text x="1246" y="400" fill="#8b949e" font-size="11">persist prefs</text>
+  <text x="1246" y="432" fill="#8b949e" font-size="11">secrets</text>
+  <text x="652" y="688" fill="#8b949e" font-size="11">REST (Places, Weather)</text>
+  <text x="982" y="688" fill="#8b949e" font-size="11">OS intent</text>
+
+  <!-- ===== LEGEND ===== -->
+  <text x="42" y="838" fill="#e6edf3" font-size="14" font-weight="600">Legend</text>
+  <rect x="42" y="852" width="16" height="16" rx="3" fill="#0d2616" stroke="#39d353" stroke-width="1.5" />
+  <text x="64" y="865" fill="#c9d1d9" font-size="12">Entry / User</text>
+
+  <rect x="207" y="852" width="16" height="16" rx="3" fill="#0d1f33" stroke="#58a6ff" stroke-width="1.5" />
+  <text x="229" y="865" fill="#c9d1d9" font-size="12">Dashboard / UI</text>
+
+  <rect x="372" y="852" width="16" height="16" rx="3" fill="#211a33" stroke="#bc8cff" stroke-width="1.5" />
+  <text x="394" y="865" fill="#c9d1d9" font-size="12">Feature modules</text>
+
+  <rect x="537" y="852" width="16" height="16" rx="3" fill="#2a1c0d" stroke="#f0883e" stroke-width="1.5" />
+  <text x="559" y="865" fill="#c9d1d9" font-size="12">Core / Shared</text>
+
+  <rect x="702" y="852" width="16" height="16" rx="3" fill="#0d2b2d" stroke="#56d4dd" stroke-width="1.5" />
+  <text x="724" y="865" fill="#c9d1d9" font-size="12">Platform services</text>
+
+  <rect x="867" y="852" width="16" height="16" rx="3" fill="#2a0f20" stroke="#db61a2" stroke-width="1.5" />
+  <text x="889" y="865" fill="#c9d1d9" font-size="12">External API / App</text>
+
+  <rect x="1032" y="852" width="16" height="16" rx="3" fill="#2a2410" stroke="#e3b341" stroke-width="1.5" />
+  <text x="1054" y="865" fill="#c9d1d9" font-size="12">Local storage</text>
+
+  <text x="42" y="906" fill="#8b949e" font-size="12">Flow top→bottom: user entry → dashboard → feature modules → platform services → external. Right column = local persistence (settings + secrets). All local-first; cloud sync optional.</text>
+  <text x="42" y="926" fill="#8b949e" font-size="12">Solid arrow = sync import / call / dependency. Each feature is independently compilable and gated by route + permission + settings.</text>
+</svg>
+</div>
+</body>
+</html>

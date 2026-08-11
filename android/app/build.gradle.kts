@@ -6,7 +6,9 @@ plugins {
 
 android {
     namespace = "com.quicky.quicky"
-    compileSdk = flutter.compileSdkVersion
+    // Pinned explicitly: AndroidX deps (geocoding_android transitive) require
+    // compileSdk >= 34; 36 is installed and recommended.
+    compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quicky Architecture Diagram</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+      background: #020617; min-height: 100vh; padding: 2rem; color: white;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .header { margin-bottom: 1.5rem; }
+    .header-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem; }
+    .pulse-dot { width: 12px; height: 12px; background: #22d3ee; border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+    h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.025em; }
+    .subtitle { color: #94a3b8; font-size: 0.875rem; margin-left: 1.75rem; }
+    .diagram-container {
+      background: rgba(15, 23, 42, 0.5); border-radius: 1rem;
+      border: 1px solid #1e293b; padding: 1.5rem; overflow-x: auto;
+    }
+    svg { width: 100%; min-width: 900px; display: block; }
+    .footer { text-align: center; margin-top: 1.5rem; color: #475569; font-size: 0.75rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="header-row">
+        <div class="pulse-dot"></div>
+        <h1>Quicky 🏃 — Architecture</h1>
+      </div>
+      <p class="subtitle">Flutter 3.24 · Riverpod · GoRouter · local-first · installed-app-only launchers</p>
+    </div>
+
+    <div class="diagram-container">
+      <svg viewBox="0 0 1100 820" font-family="'JetBrains Mono', monospace">
+        <defs>
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#64748b" />
+          </marker>
+          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+
+        <rect width="100%" height="100%" fill="url(#grid)" />
+
+        <!-- ============ USERS / DEVICE ============ -->
+        <rect x="40" y="48" width="150" height="64" rx="6" fill="rgba(30,41,59,0.5)" stroke="#94a3b8" stroke-width="1.5"/>
+        <text x="115" y="78" fill="white" font-size="12" font-weight="600" text-anchor="middle">User Device</text>
+        <text x="115" y="96" fill="#94a3b8" font-size="9" text-anchor="middle">iOS / Android</text>
+
+        <!-- ============ APP SHELL ============ -->
+        <rect x="230" y="44" width="510" height="96" rx="10" fill="rgba(8,51,68,0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+        <text x="242" y="62" fill="#22d3ee" font-size="10" font-weight="600">App Shell</text>
+        <rect x="248" y="70" width="110" height="52" rx="6" fill="rgba(8,51,68,0.6)" stroke="#22d3ee" stroke-width="1"/>
+        <text x="303" y="92" fill="white" font-size="10" font-weight="600" text-anchor="middle">Splash</text>
+        <text x="303" y="108" fill="#94a3b8" font-size="8" text-anchor="middle">2s min</text>
+        <rect x="378" y="70" width="348" height="52" rx="6" fill="rgba(8,51,68,0.6)" stroke="#22d3ee" stroke-width="1"/>
+        <text x="552" y="92" fill="white" font-size="10" font-weight="600" text-anchor="middle">Dashboard · 8 OctagonTiles</text>
+        <text x="552" y="108" fill="#22d3ee" font-size="8" text-anchor="middle">⚙ Settings hub (center)</text>
+
+        <!-- ============ FEATURE MODULES ============ -->
+        <rect x="210" y="178" width="560" height="118" rx="10" fill="rgba(8,51,68,0.25)" stroke="#22d3ee" stroke-width="1"/>
+        <text x="222" y="196" fill="#22d3ee" font-size="10" font-weight="600">Feature Modules (Riverpod controllers)</text>
+        <!-- 8 cells -->
+        <g font-size="9" text-anchor="middle">
+          <rect x="222" y="208" width="58" height="72" rx="5" fill="rgba(8,51,68,0.6)" stroke="#22d3ee" stroke-width="1"/>
+          <text x="251" y="234" fill="white" font-weight="600">Cost</text><text x="251" y="250" fill="#94a3b8" font-size="8">cam+Thai</text><text x="251" y="264" fill="#94a3b8" font-size="8">copy</text>
+
+          <rect x="288" y="208" width="58" height="72" rx="5" fill="rgba(8,51,68,0.6)" stroke="#22d3ee" stroke-width="1"/>
+          <text x="317" y="234" fill="white" font-weight="600">Loc</text><text x="317" y="250" fill="#94a3b8" font-size="8">cam+gallery</text><text x="317" y="264" fill="#94a3b8" font-size="8">Thai</text>
+
+          <rect x="354" y="208" width="58" height="72" rx="5" fill="rgba(8,51,68,0.6)" stroke="#22d3ee" stroke-width="1"/>
+          <text x="383" y="234" fill="white" font-weight="600">Bath</text><text x="383" y="250" fill="#94a3b8" font-size="8">toggle</text><text x="383" y="264" fill="#94a3b8" font-size="8">persist</text>
+
+          <rect x="420" y="208" width="58" height="72" rx="5" fill="rgba(8,51,68,0.6)" stroke="#22d3ee" stroke-width="1"/>
+          <text x="449" y="234" fill="white" font-weight="600">Attr</text><text x="449" y="250" fill="#94a3b8" font-size="8">radius</text><text x="449" y="264" fill="#94a3b8" font-size="8">filter</text>
+
+          <rect x="486" y="208" width="58" height="72" rx="5" fill="rgba(8,51,68,0.6)" stroke="#22d3ee" stroke-width="1"/>
+          <text x="515" y="234" fill="white" font-weight="600">Cnt</text><text x="515" y="250" fill="#94a3b8" font-size="8">timer</text><text x="515" y="264" fill="#94a3b8" font-size="8">countdown</text>
+
+          <rect x="552" y="208" width="58" height="72" rx="5" fill="rgba(8,51,68,0.6)" stroke="#22d3ee" stroke-width="1"/>
+          <text x="581" y="234" fill="white" font-weight="600">BOLT</text><text x="581" y="250" fill="#94a3b8" font-size="8">launch</text><text x="581" y="264" fill="#94a3b8" font-size="8">bg</text>
+
+          <rect x="618" y="208" width="58" height="72" rx="5" fill="rgba(8,51,68,0.6)" stroke="#22d3ee" stroke-width="1"/>
+          <text x="647" y="234" fill="white" font-weight="600">Bank</text><text x="647" y="250" fill="#94a3b8" font-size="8">launch</text><text x="647" y="264" fill="#94a3b8" font-size="8">bg</text>
+
+          <rect x="684" y="208" width="58" height="72" rx="5" fill="rgba(8,51,68,0.6)" stroke="#22d3ee" stroke-width="1"/>
+          <text x="713" y="234" fill="white" font-weight="600">Wx</text><text x="713" y="250" fill="#94a3b8" font-size="8">forecast</text><text x="713" y="264" fill="#94a3b8" font-size="8">3-day</text>
+        </g>
+
+        <!-- ============ PLATFORM SERVICES ============ -->
+        <rect x="210" y="328" width="560" height="118" rx="10" fill="rgba(6,78,59,0.3)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="222" y="346" fill="#34d399" font-size="10" font-weight="600">Platform Services</text>
+        <g font-size="9" text-anchor="middle">
+          <rect x="222" y="358" width="125" height="72" rx="5" fill="rgba(6,78,59,0.5)" stroke="#34d399" stroke-width="1"/>
+          <text x="284" y="386" fill="white" font-weight="600">Camera</text><text x="284" y="402" fill="#94a3b8" font-size="8">0.11 preview</text><text x="284" y="416" fill="#94a3b8" font-size="8">capture</text>
+
+          <rect x="357" y="358" width="125" height="72" rx="5" fill="rgba(6,78,59,0.5)" stroke="#34d399" stroke-width="1"/>
+          <text x="419" y="386" fill="white" font-weight="600">Geolocator</text><text x="419" y="402" fill="#94a3b8" font-size="8">+ Geocoding</text><text x="419" y="416" fill="#94a3b8" font-size="8">GPS</text>
+
+          <rect x="492" y="358" width="125" height="72" rx="5" fill="rgba(6,78,59,0.5)" stroke="#34d399" stroke-width="1"/>
+          <text x="554" y="386" fill="white" font-weight="600">URL Launcher</text><text x="554" y="402" fill="#94a3b8" font-size="8">+ Installed Apps</text><text x="554" y="416" fill="#94a3b8" font-size="8">bg intent</text>
+
+          <rect x="627" y="358" width="125" height="72" rx="5" fill="rgba(6,78,59,0.5)" stroke="#34d399" stroke-width="1"/>
+          <text x="689" y="386" fill="white" font-weight="600">Permission</text><text x="689" y="402" fill="#94a3b8" font-size="8">Handler</text><text x="689" y="416" fill="#94a3b8" font-size="8">runtime</text>
+        </g>
+
+        <!-- ============ EXTERNAL APPS (installed-only) ============ -->
+        <rect x="210" y="478" width="270" height="142" rx="10" fill="rgba(120,53,15,0.3)" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="8,4"/>
+        <text x="222" y="496" fill="#fbbf24" font-size="10" font-weight="600">External Apps (installed-only)</text>
+        <text x="225" y="520" fill="#94a3b8" font-size="9">BOLT — ee.mtakso.client</text>
+        <text x="225" y="540" fill="#94a3b8" font-size="9">SCB · KBank · BBL</text>
+        <text x="225" y="560" fill="#94a3b8" font-size="9">KTB · TTB</text>
+        <text x="225" y="588" fill="#fbbf24" font-size="8">launched in background</text>
+        <text x="225" y="604" fill="#fbbf24" font-size="8">"Not installed" if absent</text>
+
+        <!-- ============ EXTERNAL APIs ============ -->
+        <rect x="500" y="478" width="280" height="142" rx="10" fill="rgba(120,53,15,0.3)" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="8,4"/>
+        <text x="512" y="496" fill="#fbbf24" font-size="10" font-weight="600">External APIs</text>
+        <text x="515" y="522" fill="#94a3b8" font-size="9">Weather API</text>
+        <text x="525" y="538" fill="#94a3b8" font-size="8">(OpenWeather / WeatherAPI)</text>
+        <text x="515" y="564" fill="#94a3b8" font-size="9">Places / Overpass</text>
+        <text x="525" y="580" fill="#94a3b8" font-size="8">(no key, free)</text>
+        <text x="515" y="606" fill="#fbbf24" font-size="8">key stored in Settings</text>
+
+        <!-- ============ LOCAL PERSISTENCE ============ -->
+        <rect x="210" y="648" width="560" height="106" rx="10" fill="rgba(76,29,149,0.3)" stroke="#a78bfa" stroke-width="1.5"/>
+        <text x="222" y="666" fill="#a78bfa" font-size="10" font-weight="600">Local Persistence (offline-first)</text>
+        <rect x="222" y="678" width="265" height="58" rx="5" fill="rgba(76,29,149,0.5)" stroke="#a78bfa" stroke-width="1"/>
+        <text x="354" y="704" fill="white" font-size="10" font-weight="600" text-anchor="middle">shared_preferences</text>
+        <text x="354" y="722" fill="#94a3b8" font-size="8" text-anchor="middle">theme · radius · dates · toggles</text>
+        <rect x="505" y="678" width="255" height="58" rx="5" fill="rgba(76,29,149,0.5)" stroke="#a78bfa" stroke-width="1"/>
+        <text x="632" y="704" fill="white" font-size="10" font-weight="600" text-anchor="middle">flutter_secure_storage</text>
+        <text x="632" y="722" fill="#94a3b8" font-size="8" text-anchor="middle">weather key · bank secrets</text>
+
+        <!-- ============ LEGEND ============ -->
+        <rect x="820" y="60" width="250" height="430" rx="10" fill="rgba(15,23,42,0.6)" stroke="#1e293b" stroke-width="1"/>
+        <text x="835" y="86" fill="white" font-size="11" font-weight="600">Legend</text>
+        <rect x="835" y="104" width="16" height="11" rx="2" fill="rgba(8,51,68,0.6)" stroke="#22d3ee" stroke-width="1"/>
+        <text x="859" y="113" fill="#94a3b8" font-size="9">UI / App Shell</text>
+        <rect x="835" y="128" width="16" height="11" rx="2" fill="rgba(6,78,59,0.5)" stroke="#34d399" stroke-width="1"/>
+        <text x="859" y="137" fill="#94a3b8" font-size="9">Platform Service</text>
+        <rect x="835" y="152" width="16" height="11" rx="2" fill="rgba(120,53,15,0.3)" stroke="#fbbf24" stroke-width="1" stroke-dasharray="3,2"/>
+        <text x="859" y="161" fill="#94a3b8" font-size="9">External (dashed)</text>
+        <rect x="835" y="176" width="16" height="11" rx="2" fill="rgba(76,29,149,0.5)" stroke="#a78bfa" stroke-width="1"/>
+        <text x="859" y="185" fill="#94a3b8" font-size="9">Local Storage</text>
+        <line x1="835" y1="206" x2="851" y2="206" stroke="#fb7185" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <text x="859" y="209" fill="#94a3b8" font-size="9">Installed-App Launch</text>
+        <rect x="835" y="224" width="16" height="11" rx="2" fill="rgba(136,19,55,0.4)" stroke="#fb7185" stroke-width="1"/>
+        <text x="859" y="233" fill="#94a3b8" font-size="9">Permission Gate</text>
+        <line x1="835" y1="254" x2="851" y2="254" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <text x="859" y="257" fill="#94a3b8" font-size="9">Data / control flow</text>
+
+        <line x1="835" y1="286" x2="851" y2="286" stroke="#475569" stroke-width="1"/>
+        <text x="859" y="289" fill="#64748b" font-size="8">Tiers (top→bottom):</text>
+        <text x="859" y="306" fill="#94a3b8" font-size="8">1. Device / entry</text>
+        <text x="859" y="322" fill="#94a3b8" font-size="8">2. App Shell</text>
+        <text x="859" y="338" fill="#94a3b8" font-size="8">3. Feature modules</text>
+        <text x="859" y="354" fill="#94a3b8" font-size="8">4. Platform services</text>
+        <text x="859" y="370" fill="#94a3b8" font-size="8">5. External (dashed)</text>
+        <text x="859" y="386" fill="#94a3b8" font-size="8">6. Local persistence</text>
+        <text x="859" y="420" fill="#475569" font-size="8">Solid = in-app call</text>
+        <text x="859" y="436" fill="#475569" font-size="8">Dashed = external hand-off</text>
+
+        <!-- ============ ARROWS ============ -->
+        <!-- Users -> Shell -->
+        <line x1="190" y1="80" x2="228" y2="80" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <text x="209" y="74" fill="#94a3b8" font-size="8" text-anchor="middle">tap</text>
+
+        <!-- Shell -> Features -->
+        <line x1="485" y1="140" x2="485" y2="176" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <text x="495" y="162" fill="#94a3b8" font-size="8">route</text>
+
+        <!-- Features -> Platform -->
+        <line x1="485" y1="296" x2="485" y2="326" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <text x="495" y="314" fill="#94a3b8" font-size="8">call</text>
+
+        <!-- Platform -> External Apps (left curve) -->
+        <path d="M 500 430 Q 420 455 345 478" fill="none" stroke="#fb7185" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arrowhead)"/>
+        <text x="400" y="452" fill="#fb7185" font-size="8">intent pkg</text>
+
+        <!-- Platform -> External APIs (right curve) -->
+        <path d="M 570 430 Q 630 455 640 478" fill="none" stroke="#fb7185" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arrowhead)"/>
+        <text x="612" y="452" fill="#fb7185" font-size="8">HTTPS</text>
+
+        <!-- Platform/Features -> Persistence (through gap between external boxes) -->
+        <line x1="485" y1="446" x2="485" y2="646" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <text x="495" y="548" fill="#94a3b8" font-size="8">read/write</text>
+
+        <!-- Permission gate annotation: Features -> Permission cell -->
+        <path d="M 620 240 Q 690 300 689 356" fill="none" stroke="#fb7185" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arrowhead)"/>
+        <text x="715" y="300" fill="#fb7185" font-size="8">grant</text>
+      </svg>
+    </div>
+
+    <p class="footer">Quicky 🏃 · Flutter greenfield · package ids verified 2026-08-11 · launchers installed-app-only + background-resident</p>
+  </div>
+</body>
+</html>

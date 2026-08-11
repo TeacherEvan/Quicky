@@ -30,8 +30,7 @@ class BathroomPage extends ConsumerWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () =>
-            ref.read(bathroomControllerProvider.notifier).toggle(),
+        onPressed: () => ref.read(bathroomControllerProvider.notifier).toggle(),
         tooltip: 'Toggle',
         child: const Icon(Icons.swap_horiz),
       ),

@@ -40,3 +40,30 @@ lib/
   features/    splash, dashboard, cost, location, bathroom, attractions, counter, bolt, banking, weather, settings
 test/          unit + widget + integration
 ```
+
+## Best-practice follow-ups (recommendations)
+
+- **Octagon layout (fixed):** `DashboardLayout` positions each tile by its center on
+  the 45°-ring; earlier it used the top-left corner so the 8 tiles clustered in the
+  top-left quadrant. Verified by geometry + widget render; confirm visually on-device.
+- **Accessibility (Task 11.4):** `OctagonTile` now exposes a labelled `Semantics`
+  button (`isButton`, `label`) with the inner `Text` excluded from the semantics tree
+  so screen readers announce each tile once (TalkBack / VoiceOver). Covered by
+  `test/features/dashboard_test.dart` (`OctagonTile exposes a tappable semantics button`).
+- **CI release gate (Task 11.5):** `.github/workflows/ci.yml` now runs
+  `flutter build apk --release` after analyze + tests, so a broken release build fails
+  CI instead of only the local `flutter run`.
+- **Thai font (on-device check, Risk Table #9):** `flutter_localizations` + the
+  platform Roboto/Noto fallback render Thai; tofu glyphs were never observed in the
+  simulator. Before tagging a release, verify Thai strings on a real Android + iOS
+  device (Settings + all 8 tiles). If any tile shows boxes, bundle a Thai font
+  (e.g. Noto Sans Thai) under `pubspec.yaml` `fonts:` and reference it in
+  `lib/core/theme/app_theme.dart`.
+
+## Verified gate
+```bash
+flutter pub get
+flutter analyze
+flutter test
+flutter build apk --release
+```

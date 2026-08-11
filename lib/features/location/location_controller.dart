@@ -5,8 +5,8 @@ import 'package:quicky/shared/camera_state.dart';
 /// resolved place name (via geocode service).
 final locationControllerProvider =
     StateNotifierProvider<LocationController, CameraCaptureState>(
-  (ref) => LocationController(),
-);
+      (ref) => LocationController(),
+    );
 
 class LocationController extends StateNotifier<CameraCaptureState> {
   LocationController() : super(const CameraCaptureState());

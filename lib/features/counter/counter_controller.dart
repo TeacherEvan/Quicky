@@ -4,8 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// Day Counter controller: target date persisted; ticks every second.
 final counterControllerProvider =
     StateNotifierProvider<CounterController, CounterState>((ref) {
-  return CounterController();
-});
+      return CounterController();
+    });
 
 class CounterState {
   const CounterState({this.target, this.remainingSeconds = 0});

@@ -21,9 +21,7 @@ class DashboardLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(tiles.length == 8, 'DashboardLayout expects exactly 8 tiles.');
-    final placed = <Widget>[
-      Center(child: center),
-    ];
+    final placed = <Widget>[Center(child: center)];
     for (var i = 0; i < tiles.length; i++) {
       // Start at -90° (top) and step 45° clockwise.
       final angle = (-90 + i * 45) * pi / 180;
@@ -31,17 +29,16 @@ class DashboardLayout extends StatelessWidget {
       final dy = sin(angle) * radius;
       placed.add(
         Positioned(
-          left: dx,
-          top: dy,
+          // Offset by half the tile size so each tile's CENTER sits on the ring
+          // point (the Stack origin is its top-left, not the center).
+          left: dx - tiles[i].size / 2,
+          top: dy - tiles[i].size / 2,
           child: tiles[i],
         ),
       );
     }
     return SizedBox.expand(
-      child: Stack(
-        alignment: Alignment.center,
-        children: placed,
-      ),
+      child: Stack(alignment: Alignment.center, children: placed),
     );
   }
 }

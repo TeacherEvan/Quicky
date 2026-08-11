@@ -5,8 +5,8 @@ import 'services/weather_service.dart';
 /// Controller for Weather: holds the latest snapshot + loading flag.
 final weatherControllerProvider =
     StateNotifierProvider<WeatherController, WeatherState>((ref) {
-  return WeatherController();
-});
+      return WeatherController();
+    });
 
 class WeatherState {
   const WeatherState({this.snapshot, this.loading = false});

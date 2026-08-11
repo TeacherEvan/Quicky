@@ -4,8 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// Bathroom toggle: remembers the last selected facility (male/female).
 final bathroomControllerProvider =
     StateNotifierProvider<BathroomController, bool>((ref) {
-  return BathroomController();
-});
+      return BathroomController();
+    });
 
 class BathroomController extends StateNotifier<bool> {
   BathroomController() : super(true) {

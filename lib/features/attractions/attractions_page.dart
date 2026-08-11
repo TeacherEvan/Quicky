@@ -16,7 +16,9 @@ class _AttractionsPageState extends ConsumerState<AttractionsPage> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => ref.read(attractionsControllerProvider.notifier).load());
+    Future.microtask(
+      () => ref.read(attractionsControllerProvider.notifier).load(),
+    );
   }
 
   @override
@@ -38,8 +40,9 @@ class _AttractionsPageState extends ConsumerState<AttractionsPage> {
                 ButtonSegment(value: 100.0, label: Text('100km')),
               ],
               selected: {state.radiusKm},
-              onSelectionChanged: (s) =>
-                  ref.read(attractionsControllerProvider.notifier).setRadius(s.first),
+              onSelectionChanged: (s) => ref
+                  .read(attractionsControllerProvider.notifier)
+                  .setRadius(s.first),
             ),
           ),
           if (state.loading)
@@ -48,7 +51,8 @@ class _AttractionsPageState extends ConsumerState<AttractionsPage> {
             Expanded(
               child: ListView.builder(
                 itemCount: state.places.length,
-                itemBuilder: (_, i) => AttractionCard(attraction: state.places[i]),
+                itemBuilder: (_, i) =>
+                    AttractionCard(attraction: state.places[i]),
               ),
             ),
         ],

@@ -18,10 +18,7 @@ class LoadingSplash extends StatelessWidget {
           children: [
             FlutterLogo(size: 72, style: FlutterLogoStyle.stacked),
             const SizedBox(height: 24),
-            Text(
-              label,
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
+            Text(label, style: Theme.of(context).textTheme.headlineSmall),
             const SizedBox(height: 24),
             const CircularProgressIndicator(),
           ],
