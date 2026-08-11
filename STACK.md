@@ -4,7 +4,7 @@
 
 | Layer | Choice | Rationale |
 |---|---|---|
-| **Framework** | Flutter 3.24+ (Dart 3.5+) | Stable, performant, single codebase iOS/Android |
+| **Framework** | Flutter 3.44+ (Dart 3.12+) | Stable, performant, single codebase iOS/Android/Linux |
 | **State** | Riverpod 2.5+ | Compile-safe, testable, no context needed |
 | **Navigation** | GoRouter 14+ | Declarative, deep links, web-ready |
 | **DI/Service Locator** | Riverpod providers | Built-in, no extra dep |
