@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 
+import 'package:quicky/features/weather/weather_page.dart';
 import 'package:quicky/features/banking/banking_page.dart';
 import 'package:quicky/features/bolt/bolt_page.dart';
 import 'package:quicky/features/counter/counter_page.dart';
@@ -33,6 +34,10 @@ final List<RouteBase> appRoutes = <RouteBase>[
   GoRoute(
     path: Routes.splash,
     builder: (context, state) => const SplashPage(),
+  ),
+  GoRoute(
+    path: Routes.weather,
+    builder: (context, state) => const WeatherPage(),
   ),
   GoRoute(
     path: Routes.banking,
