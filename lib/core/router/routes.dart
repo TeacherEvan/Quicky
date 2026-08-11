@@ -1,10 +1,14 @@
 import 'package:go_router/go_router.dart';
 
+import 'package:quicky/features/dashboard/dashboard_page.dart';
+import 'package:quicky/features/splash/splash_page.dart';
+
 /// Central route path constants.
 class Routes {
   Routes._();
 
   static const String home = '/';
+  static const String splash = '/splash';
   static const String settings = '/settings';
   static const String cost = '/cost';
   static const String location = '/location';
@@ -18,4 +22,13 @@ class Routes {
 
 /// Append-only route registry. Feature jobs (J4–J13) add their `RouteBase`
 /// entries HERE, never inside app_router.dart, to respect directory scope locks.
-final List<RouteBase> appRoutes = <RouteBase>[];
+final List<RouteBase> appRoutes = <RouteBase>[
+  GoRoute(
+    path: Routes.splash,
+    builder: (context, state) => const SplashPage(),
+  ),
+  GoRoute(
+    path: Routes.home,
+    builder: (context, state) => const DashboardPage(),
+  ),
+];
