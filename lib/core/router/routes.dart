@@ -1,8 +1,9 @@
 import 'package:go_router/go_router.dart';
 
+import 'package:quicky/features/bathroom/bathroom_page.dart';
 import 'package:quicky/features/cost/cost_page.dart';
-import 'package:quicky/features/location/location_page.dart';
 import 'package:quicky/features/dashboard/dashboard_page.dart';
+import 'package:quicky/features/location/location_page.dart';
 import 'package:quicky/features/splash/splash_page.dart';
 
 /// Central route path constants.
@@ -28,6 +29,10 @@ final List<RouteBase> appRoutes = <RouteBase>[
   GoRoute(
     path: Routes.splash,
     builder: (context, state) => const SplashPage(),
+  ),
+  GoRoute(
+    path: Routes.bathroom,
+    builder: (context, state) => const BathroomPage(),
   ),
   GoRoute(
     path: Routes.location,
