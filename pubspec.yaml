@@ -33,32 +33,32 @@ dependencies:
 
   cupertino_icons: ^1.0.8
 
-  # State + navigation
-  flutter_riverpod: ^2.5.1
-  go_router: ^14.2.0
-
   # Camera / gallery
-  camera: ^0.11.0
+  camera: ^0.12.0+2
   image_picker: ^1.1.0
-
-  # Location
-  geolocator: ^12.0.0
-  geocoding: ^5.0.0
-
-  # Persistence
-  shared_preferences: ^2.3.0
-  flutter_secure_storage: ^9.2.0
-
-  # External app launch + installed-app detection
-  url_launcher: ^6.3.0
-  installed_apps: ^1.6.0
-  permission_handler: ^11.3.0
 
   # Network (weather / places)
   http: ^1.2.0
 
+  # Persistence
+  shared_preferences: ^2.3.0
+  flutter_secure_storage: ^11.0.0
+
+  # Location
+  geocoding: ^5.0.0
+  geolocator: ^14.0.3
+
+  # State + navigation
+  flutter_riverpod: ^2.5.1
+  go_router: ^17.5.0
+
   # i18n (pinned to 0.20.2 by flutter_localizations SDK constraint)
   intl: ^0.20.2
+
+  # External app launch + installed-app detection
+  url_launcher: ^6.3.0
+  installed_apps: ^2.1.1
+  permission_handler: ^13.0.1
 
 dev_dependencies:
   flutter_test:

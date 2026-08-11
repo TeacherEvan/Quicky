@@ -6,9 +6,9 @@ plugins {
 
 android {
     namespace = "com.quicky.quicky"
-    // Pinned explicitly: AndroidX deps (geocoding_android transitive) require
-    // compileSdk >= 34; 36 is installed and recommended.
-    compileSdk = 36
+    // Pinned explicitly: bumped plugins (flutter_secure_storage ^11,
+    // permission_handler ^13) require compileSdk/targetSdk >= 37.
+    compileSdk = 37
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -22,7 +22,7 @@ android {
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        targetSdk = 37
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
