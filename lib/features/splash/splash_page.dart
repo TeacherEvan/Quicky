@@ -9,7 +9,6 @@ class SplashPage extends StatelessWidget {
   const SplashPage({super.key});
 
   @override
-  Widget build(BuildContext context) => LoadingSplash(
-        onComplete: () => context.replace(Routes.home),
-      );
+  Widget build(BuildContext context) =>
+      LoadingSplash(onComplete: () => context.replace(Routes.home));
 }

@@ -47,7 +47,7 @@ class _CounterPageState extends ConsumerState<CounterPage> {
             TextField(
               controller: _daysController,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: 'Enter days'),
+              decoration: InputDecoration(labelText: l10n.enterDays),
             ),
             const SizedBox(height: 12),
             FilledButton(
@@ -57,13 +57,13 @@ class _CounterPageState extends ConsumerState<CounterPage> {
                   ref.read(counterControllerProvider.notifier).setDays(d);
                 }
               },
-              child: const Text('Set'),
+              child: Text(l10n.setLabel),
             ),
             const Spacer(),
             if (state.target != null)
               Text('$days', style: Theme.of(context).textTheme.displayLarge)
             else
-              const Text('No countdown set'),
+              Text(l10n.noCountdown),
             const Spacer(),
           ],
         ),

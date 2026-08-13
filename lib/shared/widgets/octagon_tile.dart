@@ -28,47 +28,57 @@ class OctagonTile extends StatelessWidget {
     final effectiveLabel = semanticsLabel ?? label;
     return Material(
       color: Colors.transparent,
-      child: Semantics(
-        button: true,
-        label: effectiveLabel,
-        child: InkWell(
-          onTap: onTap,
-          customBorder: const _OctagonBorder(),
-          borderRadius: BorderRadius.circular(12),
-          child: SizedBox(
-            width: size,
-            height: size,
-            child: ClipPath(
-              clipper: const _OctagonClipper(),
-              child: Container(
-                color: tileColor,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      icon,
-                      size: size * 0.34,
-                      color: scheme.onPrimaryContainer,
-                    ),
-                    const SizedBox(height: 4),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      // Exclude the inner Text from the semantics tree so the
-                      // tile's label isn't announced twice (Text + Semantics).
-                      child: ExcludeSemantics(
-                        child: Text(
-                          label,
-                          textAlign: TextAlign.center,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: size * 0.13,
-                            color: scheme.onPrimaryContainer,
+      // Keyboard accessibility (WCAG 2.1 AA): InkWell is focusable and activates
+      // on Enter/Space; FocusableActionDetector makes the focus ring visible and
+      // exposes an explicit ActivateIntent so the ripple tracks both pointer and key.
+      child: FocusableActionDetector(
+        mouseCursor: SystemMouseCursors.click,
+        child: Semantics(
+          button: true,
+          label: effectiveLabel,
+          child: InkWell(
+            onTap: onTap,
+            customBorder: const _OctagonBorder(),
+            borderRadius: BorderRadius.circular(12),
+            // Draw the focus highlight above the octagon clip so it is never occluded.
+            focusColor: scheme.onPrimaryContainer.withOpacity(0.24),
+            hoverColor: scheme.onPrimaryContainer.withOpacity(0.12),
+            splashFactory: InkRipple.splashFactory,
+            child: SizedBox(
+              width: size,
+              height: size,
+              child: ClipPath(
+                clipper: const _OctagonClipper(),
+                child: Container(
+                  color: tileColor,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        icon,
+                        size: size * 0.34,
+                        color: scheme.onPrimaryContainer,
+                      ),
+                      const SizedBox(height: 4),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        // Exclude the inner Text from the semantics tree so the
+                        // tile's label isn't announced twice (Text + Semantics).
+                        child: ExcludeSemantics(
+                          child: Text(
+                            label,
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: size * 0.13,
+                              color: scheme.onPrimaryContainer,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

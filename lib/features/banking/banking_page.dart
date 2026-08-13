@@ -52,7 +52,7 @@ class _BankingPageState extends ConsumerState<BankingPage> {
                           onPressed: () => BankingService().launch(name),
                           child: const Text('Open'),
                         )
-                      : const Chip(label: Text('Not installed')),
+                      : Chip(label: Text(l10n.notInstalled)),
                 );
               },
             ),

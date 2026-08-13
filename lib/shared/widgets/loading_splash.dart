@@ -24,15 +24,13 @@ class _LoadingSplashState extends State<LoadingSplash> {
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.asset('assets/videos/startup.mp4');
-    _controller
-      ..initialize()
-      ..addListener(_onVideoProgress);
-    _controller.initialize().then((_) {
-      if (!mounted) return;
-      setState(() {});
-      _controller.play();
-    }, onError: (_) => _finish());
+    _controller = VideoPlayerController.asset('assets/videos/startup.mp4')
+      ..addListener(_onVideoProgress)
+      ..initialize().then((_) {
+        if (!mounted) return;
+        setState(() {});
+        _controller.play();
+      }, onError: (_) => _finish());
 
     // Safety net: never trap the user on a stalled splash.
     Timer(const Duration(seconds: 14), _finish);
@@ -80,15 +78,18 @@ class _LoadingSplashState extends State<LoadingSplash> {
             children: [
               _controller.value.isInitialized
                   ? AspectRatio(
-                      aspectRatio: _controller.value.size.width /
+                      aspectRatio:
+                          _controller.value.size.width /
                           _controller.value.size.height,
                       child: VideoPlayer(_controller),
                     )
                   : const CircularProgressIndicator(),
               const SizedBox(height: 24),
               if (widget.label != null)
-                Text(widget.label!,
-                    style: Theme.of(context).textTheme.headlineSmall),
+                Text(
+                  widget.label!,
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
             ],
           ),
         ),
