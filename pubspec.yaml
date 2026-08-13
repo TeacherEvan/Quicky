@@ -48,10 +48,8 @@ dependencies:
   # External app launch + installed-app detection
   url_launcher: ^6.3.0
   installed_apps: ^2.1.1
-  intl: ^0.20.2
   permission_handler: ^13.0.1
   shared_preferences: ^2.3.0
-  url_launcher: ^6.3.0
 
 dev_dependencies:
   flutter_localizations:
