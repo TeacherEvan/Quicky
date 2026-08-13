@@ -7,7 +7,7 @@ import 'package:quicky/features/dashboard/dashboard_controller.dart';
 import 'package:quicky/shared/widgets/dashboard_layout.dart';
 import 'package:quicky/shared/widgets/octagon_tile.dart';
 
-/// The octagon dashboard: 8 feature tiles arranged around the center Settings hub.
+/// The octagon dashboard: 8 feature tiles around the center Settings hub.
 class DashboardPage extends ConsumerWidget {
   const DashboardPage({super.key});
 

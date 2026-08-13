@@ -15,7 +15,7 @@ class SettingsSections {
       // 1. Appearance
       const SectionHeader(title: 'Appearance'),
       DropdownButtonFormField<String>(
-        value: s.themeMode,
+        initialValue: s.themeMode,
         items: const [
           DropdownMenuItem(value: 'system', child: Text('System')),
           DropdownMenuItem(value: 'light', child: Text('Light')),
@@ -25,7 +25,7 @@ class SettingsSections {
         decoration: const InputDecoration(labelText: 'Theme'),
       ),
       DropdownButtonFormField<String>(
-        value: s.language,
+        initialValue: s.language,
         items: const [
           DropdownMenuItem(value: 'en', child: Text('English')),
           DropdownMenuItem(value: 'th', child: Text('Thai')),
@@ -36,11 +36,11 @@ class SettingsSections {
       // 2. Location
       const SectionHeader(title: 'Location'),
       DropdownButtonFormField<double>(
-        value: s.radiusKm,
+        initialValue: s.radiusKm,
         items: const [
-          DropdownMenuItem(value: 10.0, child: Text('10 km')),
-          DropdownMenuItem(value: 40.0, child: Text('40 km')),
-          DropdownMenuItem(value: 100.0, child: Text('100 km')),
+          DropdownMenuItem(value: 10, child: Text('10 km')),
+          DropdownMenuItem(value: 40, child: Text('40 km')),
+          DropdownMenuItem(value: 100, child: Text('100 km')),
         ],
         onChanged: (v) => ctrl.setRadius(v!),
         decoration: const InputDecoration(labelText: 'Default radius'),
@@ -48,7 +48,7 @@ class SettingsSections {
       // 3. Weather
       const SectionHeader(title: 'Weather'),
       DropdownButtonFormField<String>(
-        value: s.weatherUnits,
+        initialValue: s.weatherUnits,
         items: const [
           DropdownMenuItem(value: 'C', child: Text('Celsius')),
           DropdownMenuItem(value: 'F', child: Text('Fahrenheit')),
@@ -72,7 +72,7 @@ class SettingsSections {
 }
 
 class SectionHeader extends StatelessWidget {
-  const SectionHeader({super.key, required this.title});
+  const SectionHeader({required this.title, super.key});
 
   final String title;
 

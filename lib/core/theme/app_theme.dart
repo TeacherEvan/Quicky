@@ -11,11 +11,7 @@ class AppTheme {
 
   static final ThemeData lightTheme = ThemeData(
     useMaterial3: true,
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: _seed,
-      brightness: Brightness.light,
-      surface: _warmSurface,
-    ),
+    colorScheme: ColorScheme.fromSeed(seedColor: _seed, surface: _warmSurface),
     scaffoldBackgroundColor: _warmSurface,
     filledButtonTheme: FilledButtonThemeData(
       style: FilledButton.styleFrom(

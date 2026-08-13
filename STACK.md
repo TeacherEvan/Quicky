@@ -4,23 +4,25 @@
 
 | Layer | Choice | Rationale |
 |---|---|---|
-| **Framework** | Flutter 3.44+ (Dart 3.12+) | Stable, performant, single codebase iOS/Android/Linux |
+| **Framework** | Flutter 3.44.x (Dart 3.12.2+) | Stable, single codebase iOS/Android/Linux (SDK pinned in pubspec) |
 | **State** | Riverpod 2.5+ | Compile-safe, testable, no context needed |
-| **Navigation** | GoRouter 14+ | Declarative, deep links, web-ready |
+| **Navigation** | GoRouter 17.5+ | Declarative, deep links |
 | **DI/Service Locator** | Riverpod providers | Built-in, no extra dep |
 | **Local Storage** | shared_preferences 2.3+ | Simple key-value, cross-platform |
-| **Secure Storage** | flutter_secure_storage 9+ | API keys, tokens (encrypted) |
-| **Camera** | camera 0.11+ | Full control, preview, capture |
+| **Secure Storage** | flutter_secure_storage 11+ | API keys, tokens (encrypted) |
+| **Camera** | camera 0.12+ | Full control, preview, capture |
 | **Image Picker** | image_picker 1.1+ | Gallery + camera unified |
-| **Location** | geolocator 12+ + geocoding 3+ | Permissions, GPS, reverse geocode |
-| **Network** | dio 5.7+ | Interceptors, retries, timeout |
-| **Weather API** | OpenWeatherMap / WeatherAPI | Free tier, global coverage |
+| **Location** | geolocator 14+ + geocoding 5+ | Permissions, GPS, reverse geocode |
+| **Network** | http 1.2+ | Stdlib http client (no dio) |
+| **Weather API** | OpenWeatherMap / WeatherAPI (http) | Free tier, global coverage |
 | **Places/Attractions** | Google Places (paid) or OSM/Overpass (free) | Start with OSM/Overpass API (no key) |
-| **App Launch** | url_launcher 6.2+ | Universal links, custom schemes |
-| **i18n** | flutter_localizations + intl + arb | Official, compile-time safety |
+| **App Launch** | url_launcher 6.3+ | Universal links, custom schemes |
+| **Installed-App Detection** | installed_apps 2.1+ | Enumerate + launch installed apps (Android 11+ needs QUERY_ALL_PACKAGES) |
+| **Permissions** | permission_handler 13+ | Camera / location runtime grants |
+| **i18n** | flutter_localizations + intl 0.20 + arb | Official, compile-time safety |
 | **Theme** | Material 3 (MaterialColorScheme) | Adaptive, dynamic color |
-| **Lint** | very_good_analysis | Strict, used by Flutter team |
-| **Testing** | Mocktail (unit), integration_test (e2e) | Modern, maintained |
+| **Lint** | very_good_analysis 6+ | Strict, used by Flutter team |
+| **Testing** | Mocktail 1+ (unit), integration_test (e2e, deferred) | Modern, maintained |
 | **CI** | GitHub Actions + subosito/flutter-action | Standard, cached |
 
 ---
@@ -35,7 +37,6 @@ lib/
 │   ├── router/routes.dart       # appRoutes registry — features append here
 │   ├── theme/app_theme.dart     # Light/dark, colors
 │   ├── l10n/                    # ARB files (en, th)
-│   └── utils/                   # Extensions, helpers
 ├── shared/
 │   └── widgets/                 # OctagonTile, DashboardLayout, Splash
 ├── features/

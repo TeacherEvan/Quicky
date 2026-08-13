@@ -10,9 +10,9 @@ import 'package:quicky/shared/widgets/octagon_tile.dart';
 /// ties the rim to the center hub. Tiles fade + pop in on a staggered curve.
 class DashboardLayout extends StatefulWidget {
   const DashboardLayout({
-    super.key,
     required this.tiles,
     required this.center,
+    super.key,
     this.radius = 120,
   });
 
@@ -54,7 +54,7 @@ class _DashboardLayoutState extends State<DashboardLayout>
     final insets = mq.viewPadding;
     final padV = (insets.top + insets.bottom) / 2;
     final safeMax = maxRadius - padV;
-    final r = max(64.0, min(widget.radius, safeMax));
+    final r = max(64, min(widget.radius, safeMax));
 
     // Brighter ring in dark mode so it stays visible on _darkSurface; faint in
     // light mode so it doesn't compete with the octagons.
