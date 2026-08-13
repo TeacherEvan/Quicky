@@ -1,12 +1,35 @@
 import 'package:flutter/material.dart';
-
-/// Startup splash: logo + indeterminate progress. Minimum display is enforced
+import 'package:video_player/video_player.dart';
+/// Startup splash: video-based animation. Minimum display is enforced
 /// by the caller (splash page) before navigating.
-class LoadingSplash extends StatelessWidget {
+class LoadingSplash extends StatefulWidget {
   const LoadingSplash({super.key, this.label = 'Quicky'});
+  final String? label;
+  @override
+  State<LoadingSplash> createState() => _LoadingSplashState();
+}
 
-  final String label;
-
+class _LoadingSplashState extends State<LoadingSplash> {
+  late VideoPlayerController _controller;
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.asset('assets/videos/startup.mp4')
+      ..initialize().then((_) {
+        // Ensure the first frame is shown after initialization
+        setState(() {});
+        // Play the video
+        _controller.play();
+        // Ensure looping
+        _controller.setLooping(true);
+      });
+    super.initState();
+  }
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
@@ -16,9 +39,18 @@ class LoadingSplash extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            FlutterLogo(size: 72, style: FlutterLogoStyle.stacked),
+            // Wait for video to initialize
+            _controller.value.isInitialized
+                ? AspectRatio(
+                    aspectRatio: _controller.value.size.width /
+                        _controller.value.size.height,
+                    child: VideoPlayer(_controller),
+                  )
+                : const CircularProgressIndicator(),
             const SizedBox(height: 24),
-            Text(label, style: Theme.of(context).textTheme.headlineSmall),
+            if (widget.label != null)
+              Text(widget.label!,
+                  style: Theme.of(context).textTheme.headlineSmall),
             const SizedBox(height: 24),
             const CircularProgressIndicator(),
           ],

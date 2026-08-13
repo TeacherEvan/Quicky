@@ -59,6 +59,7 @@ dependencies:
   url_launcher: ^6.3.0
   installed_apps: ^2.1.1
   permission_handler: ^13.0.1
+  video_player: ^2.14.0
 
 dev_dependencies:
   flutter_test:
@@ -76,7 +77,7 @@ dev_dependencies:
   # no integration test target is present; re-add when the e2e suite is built.
 
 # For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
+# following page: https://dart.dev/tools/pub/pubspec.yaml
 
 # The following section is specific to Flutter packages.
 flutter:
@@ -86,10 +87,8 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/videos/startup.mp4
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -97,10 +96,9 @@ flutter:
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/to/asset-from-package
 
-  # To add custom fonts to your application, add a fonts section here,
+  # To add custom fonts to the application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
-  # "family" key with the font family name, and a "fonts" key with a
-  # list giving the asset and other descriptors for the font. For
+  # "family" key with the font family name, and a list giving the asset and other descriptors for the font. For
   # example:
   # fonts:
   #   - family: Schyler
