@@ -1,0 +1,34 @@
+import fs from 'fs';
+import { Locator, launch } from 'puppeteer'; // v25.0.0 or later
+
+const browser = await launch();
+const page = await browser.newPage();
+const timeout = 5000;
+page.setDefaultTimeout(timeout);
+
+const lhApi = await import('lighthouse'); // v10.0.0 or later
+const flags = {
+    screenEmulation: {
+        disabled: true
+    }
+}
+const config = lhApi.desktopConfig;
+const lhFlow = await lhApi.startFlow(page, {name: 'qUICKY TEST 8/13/2026 at 4:50:10 PM', config, flags});
+{
+    const targetPage = page;
+    await targetPage.setViewport({
+        width: 805,
+        height: 649
+    })
+}
+await lhFlow.startNavigation();
+{
+    const targetPage = page;
+    await targetPage.goto('http://localhost:8090/');
+}
+await lhFlow.endNavigation();
+const lhFlowReport = await lhFlow.generateReport();
+fs.writeFileSync(import.meta.dirname + '/flow.report.html', lhFlowReport)
+
+await browser.close();
+
