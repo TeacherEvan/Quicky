@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -55,7 +54,7 @@ void main() {
     );
     final node = tester.getSemantics(find.bySemanticsLabel('Cost'));
     expect(node.label, 'Cost');
-    expect(node.hasFlag(SemanticsFlag.isButton), isTrue);
+    expect(node.getSemanticsData().flagsCollection.isButton, isTrue);
     await tester.tap(find.bySemanticsLabel('Cost'));
     expect(tapped, isTrue);
   });
@@ -122,7 +121,9 @@ void main() {
     for (var i = 0; i < 5 && !focused; i++) {
       await tester.sendKeyEvent(LogicalKeyboardKey.tab);
       await tester.pumpAndSettle();
-      focused = tester.getSemantics(tile).hasFlag(SemanticsFlag.isFocused);
+      final node = tester.getSemantics(tile);
+      focused =
+          node.getSemanticsData().flagsCollection.isFocused.name != 'none';
     }
     expect(focused, isTrue, reason: 'tile must be keyboard-focusable');
 

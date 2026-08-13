@@ -4,9 +4,9 @@ import 'package:quicky/core/l10n/app_localizations.dart';
 /// Result card for the Cost Translator: captured image + Thai phrase + copy.
 class CostResultCard extends StatelessWidget {
   const CostResultCard({
-    super.key,
     required this.imagePath,
     required this.thaiPhrase,
+    super.key,
   });
 
   final String imagePath;

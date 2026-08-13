@@ -16,7 +16,7 @@ class LoadingSplash extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            FlutterLogo(size: 72, style: FlutterLogoStyle.stacked),
+            const FlutterLogo(size: 72, style: FlutterLogoStyle.stacked),
             const SizedBox(height: 24),
             Text(label, style: Theme.of(context).textTheme.headlineSmall),
             const SizedBox(height: 24),

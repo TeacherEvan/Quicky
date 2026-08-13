@@ -9,10 +9,10 @@ import 'package:flutter/material.dart';
 /// feedback; the whole tile is one semantics node.
 class OctagonTile extends StatefulWidget {
   const OctagonTile({
-    super.key,
     required this.icon,
     required this.label,
     required this.onTap,
+    super.key,
     this.octagonSize = 68,
     this.color,
     this.accent,
@@ -29,7 +29,7 @@ class OctagonTile extends StatefulWidget {
   /// scannability. Falls back to the on-color when null.
   final Color? accent;
 
-  /// Optional screen-reader label; defaults to [label] when null (Task 11.4 a11y).
+  /// Optional screen-reader label; defaults to [label] (Task 11.4 a11y).
   final String? semanticsLabel;
 
   @override
@@ -43,7 +43,6 @@ class _OctagonTileState extends State<OctagonTile>
     vsync: this,
     duration: const Duration(milliseconds: 110),
     lowerBound: 0.92,
-    upperBound: 1,
   )..value = 1;
 
   void _press() => _scale.reverse();
@@ -141,7 +140,7 @@ class _OctagonBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final clipper = const _OctagonClipper();
+    const clipper = _OctagonClipper();
     final edge = accent ?? onColor;
     return Stack(
       children: [

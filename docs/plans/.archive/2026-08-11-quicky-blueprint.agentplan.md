@@ -1,3 +1,5 @@
+**Status:** ✅ **Archived — Implemented & Verified** (Aug 2026)
+
 ```agentplan
 @META id=BP-2026-0811-01|repo=Quicky|head=<fill-after>|branch=master
 @STACK flutter 3.44.9|dart pub|flutter test|github-actions

@@ -20,7 +20,7 @@ void main() {
   test('CounterController.setDays sets a future target', () async {
     final c = CounterController();
     await Future<void>.delayed(Duration.zero);
-    c.setDays(5);
+    await c.setDays(5);
     expect(c.state.target, isNotNull);
     expect(c.state.remainingSeconds, greaterThan(0));
   });
