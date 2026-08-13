@@ -11,3 +11,8 @@ linter:
   rules:
     prefer_single_quotes: true
     always_use_package_imports: false
+    # Quicky is a private app (publish_to: 'none'), not a published package:
+    # public_member_api_docs is a library rule and sort_pub_dependencies
+    # conflicts with the Flutter convention of listing `flutter: sdk:` first.
+    public_member_api_docs: false
+    sort_pub_dependencies: false
