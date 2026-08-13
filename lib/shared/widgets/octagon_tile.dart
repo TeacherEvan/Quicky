@@ -1,25 +1,58 @@
 import 'package:flutter/material.dart';
 
-/// An octagon-shaped tappable tile: clip-path octagon, icon + label, tap ripple.
-class OctagonTile extends StatelessWidget {
+/// An octagon-shaped tappable tile.
+///
+/// The octagon body carries a real cast shadow ([PhysicalShape]) plus a subtle
+/// top-down gradient sheen and a thin outline so it reads as a raised surface
+/// rather than a flat cut-out. The label sits *below* the octagon (not inside
+/// it) so it stays legible at small sizes. A press scales the body for tactile
+/// feedback; the whole tile is one semantics node.
+class OctagonTile extends StatefulWidget {
   const OctagonTile({
-    super.key,
     required this.icon,
     required this.label,
     required this.onTap,
-    this.size = 72,
+    super.key,
+    this.octagonSize = 68,
     this.color,
+    this.accent,
     this.semanticsLabel,
   });
 
   final IconData icon;
   final String label;
   final VoidCallback onTap;
-  final double size;
+  final double octagonSize;
   final Color? color;
 
-  /// Optional screen-reader label; defaults to [label] when null (Task 11.4 a11y).
+  /// Optional feature accent. Drives a subtle corner tint + edge glow for
+  /// scannability. Falls back to the on-color when null.
+  final Color? accent;
+
+  /// Optional screen-reader label; defaults to [label] (Task 11.4 a11y).
   final String? semanticsLabel;
+
+  @override
+  State<OctagonTile> createState() => _OctagonTileState();
+}
+
+class _OctagonTileState extends State<OctagonTile>
+    with SingleTickerProviderStateMixin {
+  /// Drives the press-scale feedback (0.92 pressed -> 1.0 resting).
+  late final AnimationController _scale = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 110),
+    lowerBound: 0.92,
+  )..value = 1;
+
+  void _press() => _scale.reverse();
+  void _release() => _scale.forward();
+
+  @override
+  void dispose() {
+    _scale.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,11 +115,46 @@ class OctagonTile extends StatelessWidget {
                 ),
               ),
             ),
+            child: Center(
+              child: Icon(icon, size: size * 0.42, color: onColor),
+            ),
           ),
         ),
-      ),
+        // Thin accent edge so the octagon keeps its hue against similar tones
+        // and reads as the feature's color at a glance.
+        IgnorePointer(
+          child: SizedBox(
+            width: size,
+            height: size,
+            child: CustomPaint(
+              painter: _OctagonOutlinePainter(edge.withValues(alpha: 0.85)),
+            ),
+          ),
+        ),
+      ],
     );
   }
+}
+
+class _OctagonOutlinePainter extends CustomPainter {
+  _OctagonOutlinePainter(this.color);
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final path = const _OctagonClipper().getClip(size);
+    canvas.drawPath(
+      path,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.5
+        ..color = color,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant _OctagonOutlinePainter old) =>
+      old.color != color;
 }
 
 class _OctagonClipper extends CustomClipper<Path> {
@@ -97,7 +165,7 @@ class _OctagonClipper extends CustomClipper<Path> {
     final w = size.width;
     final h = size.height;
     final c = w * 0.29; // corner cut length
-    final path = Path()
+    return Path()
       ..moveTo(c, 0)
       ..lineTo(w - c, 0)
       ..lineTo(w, c)
@@ -107,7 +175,6 @@ class _OctagonClipper extends CustomClipper<Path> {
       ..lineTo(0, h - c)
       ..lineTo(0, c)
       ..close();
-    return path;
   }
 
   @override

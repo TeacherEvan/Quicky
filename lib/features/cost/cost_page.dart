@@ -6,7 +6,7 @@ import 'package:quicky/features/cost/cost_controller.dart';
 import 'package:quicky/features/cost/widgets/cost_result_card.dart';
 
 /// Cost Translator page: camera preview, capture button, and a result card.
-/// Camera lifecycle is handled locally; the captured path lands in the provider.
+/// Camera lifecycle is handled locally; captured path lands in the provider.
 class CostPage extends ConsumerStatefulWidget {
   const CostPage({super.key});
 
@@ -35,11 +35,12 @@ class _CostPageState extends ConsumerState<CostPage> {
 
   Future<void> _capture() async {
     if (_controller == null || !_controller!.value.isInitialized) return;
+    final l10n = AppLocalizations.of(context);
     final file = await _controller!.takePicture();
     ref.read(costControllerProvider.notifier).setImage(file.path);
     ref
         .read(costControllerProvider.notifier)
-        .setPhrase(AppLocalizations.of(context).translate('costQuestion'));
+        .setPhrase(l10n.translate('costQuestion'));
   }
 
   @override

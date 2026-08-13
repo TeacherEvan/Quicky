@@ -1,16 +1,15 @@
 import 'package:go_router/go_router.dart';
-
-import 'package:quicky/features/settings/settings_page.dart';
-import 'package:quicky/features/weather/weather_page.dart';
-import 'package:quicky/features/banking/banking_page.dart';
-import 'package:quicky/features/bolt/bolt_page.dart';
-import 'package:quicky/features/counter/counter_page.dart';
 import 'package:quicky/features/attractions/attractions_page.dart';
+import 'package:quicky/features/banking/banking_page.dart';
 import 'package:quicky/features/bathroom/bathroom_page.dart';
+import 'package:quicky/features/bolt/bolt_page.dart';
 import 'package:quicky/features/cost/cost_page.dart';
+import 'package:quicky/features/counter/counter_page.dart';
 import 'package:quicky/features/dashboard/dashboard_page.dart';
 import 'package:quicky/features/location/location_page.dart';
+import 'package:quicky/features/settings/settings_page.dart';
 import 'package:quicky/features/splash/splash_page.dart';
+import 'package:quicky/features/weather/weather_page.dart';
 
 /// Central route path constants.
 class Routes {
@@ -30,7 +29,8 @@ class Routes {
 }
 
 /// Append-only route registry. Feature jobs (J4–J13) add their `RouteBase`
-/// entries HERE, never inside app_router.dart, to respect directory scope locks.
+/// entries HERE, never inside app_router.dart; respects directory scope
+/// locks.
 final List<RouteBase> appRoutes = <RouteBase>[
   GoRoute(path: Routes.splash, builder: (context, state) => const SplashPage()),
   GoRoute(

@@ -3,7 +3,7 @@ import 'package:quicky/features/attractions/services/places_service.dart';
 
 /// Card showing one attraction: name, distance, type, open-now badge.
 class AttractionCard extends StatelessWidget {
-  const AttractionCard({super.key, required this.attraction});
+  const AttractionCard({required this.attraction, super.key});
 
   final Attraction attraction;
 

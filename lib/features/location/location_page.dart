@@ -36,12 +36,12 @@ class _LocationPageState extends ConsumerState<LocationPage> {
   Future<void> _capture() async {
     if (_controller == null || !_controller!.value.isInitialized) return;
     final file = await _controller!.takePicture();
-    _onImage(file.path);
+    await _onImage(file.path);
   }
 
   Future<void> _pickGallery() async {
     final xfile = await _picker.pickImage(source: ImageSource.gallery);
-    if (xfile != null) _onImage(xfile.path);
+    if (xfile != null) await _onImage(xfile.path);
   }
 
   Future<void> _onImage(String path) async {

@@ -59,22 +59,26 @@ class SettingsController extends StateNotifier<SettingsState> {
 
   Future<void> setTheme(String v) async {
     state = state.copyWith(themeMode: v);
-    (await SharedPreferences.getInstance()).setString(_kTheme, v);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_kTheme, v);
   }
 
   Future<void> setLanguage(String v) async {
     state = state.copyWith(language: v);
-    (await SharedPreferences.getInstance()).setString(_kLang, v);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_kLang, v);
   }
 
   Future<void> setRadius(double v) async {
     state = state.copyWith(radiusKm: v);
-    (await SharedPreferences.getInstance()).setDouble(_kRadius, v);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble(_kRadius, v);
   }
 
   Future<void> setUnits(String v) async {
     state = state.copyWith(weatherUnits: v);
-    (await SharedPreferences.getInstance()).setString(_kUnits, v);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_kUnits, v);
   }
 
   /// Securely stores an API key (e.g. weather/places provider).

@@ -7,7 +7,7 @@ import 'package:quicky/features/dashboard/dashboard_controller.dart';
 import 'package:quicky/shared/widgets/dashboard_layout.dart';
 import 'package:quicky/shared/widgets/octagon_tile.dart';
 
-/// The octagon dashboard: 8 feature tiles arranged around the center Settings hub.
+/// The octagon dashboard: 8 feature tiles around the center Settings hub.
 class DashboardPage extends ConsumerWidget {
   const DashboardPage({super.key});
 
@@ -21,7 +21,7 @@ class DashboardPage extends ConsumerWidget {
           (t) => OctagonTile(
             icon: t.icon,
             label: _label(l10n, t.labelKey),
-            semanticsLabel: _label(l10n, t.labelKey),
+            accent: t.accent,
             onTap: () => context.push(t.route),
           ),
         )
@@ -32,9 +32,9 @@ class DashboardPage extends ConsumerWidget {
         center: OctagonTile(
           icon: Icons.settings,
           label: l10n.settingsTile,
-          semanticsLabel: l10n.settingsTile,
           onTap: () => context.push(Routes.settings),
           color: Theme.of(context).colorScheme.secondaryContainer,
+          octagonSize: 92,
         ),
         tiles: octagonTiles,
       ),
@@ -60,7 +60,7 @@ class DashboardPage extends ConsumerWidget {
       case 'weatherTile':
         return l10n.weatherTile;
       default:
-        return key;
+        throw ArgumentError('Unknown dashboard tile labelKey: $key');
     }
   }
 }

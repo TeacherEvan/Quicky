@@ -38,11 +38,11 @@ class SettingsSections {
       // 2. Location
       SectionHeader(title: l10n.sectionLocation),
       DropdownButtonFormField<double>(
-        value: s.radiusKm,
+        initialValue: s.radiusKm,
         items: const [
-          DropdownMenuItem(value: 10.0, child: Text('10 km')),
-          DropdownMenuItem(value: 40.0, child: Text('40 km')),
-          DropdownMenuItem(value: 100.0, child: Text('100 km')),
+          DropdownMenuItem(value: 10, child: Text('10 km')),
+          DropdownMenuItem(value: 40, child: Text('40 km')),
+          DropdownMenuItem(value: 100, child: Text('100 km')),
         ],
         onChanged: (v) => ctrl.setRadius(v!),
         decoration: InputDecoration(labelText: l10n.settingRadius),
@@ -50,7 +50,7 @@ class SettingsSections {
       // 3. Weather
       SectionHeader(title: l10n.sectionWeather),
       DropdownButtonFormField<String>(
-        value: s.weatherUnits,
+        initialValue: s.weatherUnits,
         items: const [
           DropdownMenuItem(value: 'C', child: Text('Celsius')),
           DropdownMenuItem(value: 'F', child: Text('Fahrenheit')),
@@ -74,7 +74,7 @@ class SettingsSections {
 }
 
 class SectionHeader extends StatelessWidget {
-  const SectionHeader({super.key, required this.title});
+  const SectionHeader({required this.title, super.key});
 
   final String title;
 

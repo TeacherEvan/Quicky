@@ -34,10 +34,10 @@ class _AttractionsPageState extends ConsumerState<AttractionsPage> {
             padding: const EdgeInsets.all(12),
             child: SegmentedButton<double>(
               segments: const [
-                ButtonSegment(value: 0.0, label: Text('Area')),
-                ButtonSegment(value: 10.0, label: Text('10km')),
-                ButtonSegment(value: 40.0, label: Text('40km')),
-                ButtonSegment(value: 100.0, label: Text('100km')),
+                ButtonSegment(value: 0, label: Text('Area')),
+                ButtonSegment(value: 10, label: Text('10km')),
+                ButtonSegment(value: 40, label: Text('40km')),
+                ButtonSegment(value: 100, label: Text('100km')),
               ],
               selected: {state.radiusKm},
               onSelectionChanged: (s) => ref

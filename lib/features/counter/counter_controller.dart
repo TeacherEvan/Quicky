@@ -37,7 +37,7 @@ class CounterController extends StateNotifier<CounterState> {
     }
   }
 
-  void setDays(int days) async {
+  Future<void> setDays(int days) async {
     final target = DateTime.now().add(Duration(days: days));
     state = state.copyWith(target: target);
     _tick();
