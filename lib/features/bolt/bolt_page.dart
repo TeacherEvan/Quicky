@@ -42,7 +42,7 @@ class _BoltPageState extends ConsumerState<BoltPage> {
         child: _checking
             ? const CircularProgressIndicator()
             : !_installed
-            ? const Text('Not installed')
+            ? Text(l10n.notInstalled)
             : FilledButton.icon(
                 onPressed: _launch,
                 icon: const Icon(Icons.electric_bolt),

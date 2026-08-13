@@ -66,7 +66,7 @@ class _CostPageState extends ConsumerState<CostPage> {
                   return const Center(child: CircularProgressIndicator());
                 }
                 if (_controller == null || !_controller!.value.isInitialized) {
-                  return const Center(child: Text('No camera available'));
+                  return Center(child: Text(l10n.noCamera));
                 }
                 return CameraPreview(_controller!);
               },
@@ -83,7 +83,7 @@ class _CostPageState extends ConsumerState<CostPage> {
               child: FilledButton.icon(
                 onPressed: _capture,
                 icon: const Icon(Icons.camera),
-                label: const Text('Capture'),
+                label: Text(l10n.capture),
               ),
             ),
           ),

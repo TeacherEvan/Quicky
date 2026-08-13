@@ -78,7 +78,7 @@ class _LocationPageState extends ConsumerState<LocationPage> {
                       }
                       if (_controller == null ||
                           !_controller!.value.isInitialized) {
-                        return const Center(child: Text('No camera available'));
+                        return Center(child: Text(l10n.noCamera));
                       }
                       return CameraPreview(_controller!);
                     },
@@ -109,7 +109,7 @@ class _LocationPageState extends ConsumerState<LocationPage> {
                     child: FilledButton.icon(
                       onPressed: _capture,
                       icon: const Icon(Icons.camera),
-                      label: const Text('Capture'),
+                      label: Text(l10n.capture),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -117,7 +117,7 @@ class _LocationPageState extends ConsumerState<LocationPage> {
                     child: OutlinedButton.icon(
                       onPressed: _pickGallery,
                       icon: const Icon(Icons.photo_library),
-                      label: const Text('Gallery'),
+                      label: Text(l10n.gallery),
                     ),
                   ),
                 ],

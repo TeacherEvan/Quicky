@@ -57,107 +57,62 @@ class _OctagonTileState extends State<OctagonTile>
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final base = widget.color ?? scheme.primaryContainer;
-    final onColor = scheme.onPrimaryContainer;
-    final caption = TextStyle(
-      fontSize: 12,
-      fontWeight: FontWeight.w600,
-      color: scheme.onSurfaceVariant,
-    );
-
-    return Semantics(
-      button: true,
-      label: widget.semanticsLabel ?? widget.label,
+    final tileColor = color ?? scheme.primaryContainer;
+    final effectiveLabel = semanticsLabel ?? label;
+    return Material(
+      color: Colors.transparent,
+      // Keyboard accessibility (WCAG 2.1 AA): InkWell is focusable and activates
+      // on Enter/Space; FocusableActionDetector makes the focus ring visible and
+      // exposes an explicit ActivateIntent so the ripple tracks both pointer and key.
       child: FocusableActionDetector(
         mouseCursor: SystemMouseCursors.click,
-        actions: <Type, Action<Intent>>{
-          ActivateIntent: CallbackAction<ActivateIntent>(
-            onInvoke: (_) => widget.onTap(),
-          ),
-          ButtonActivateIntent: CallbackAction<ButtonActivateIntent>(
-            onInvoke: (_) => widget.onTap(),
-          ),
-        },
-        child: InkWell(
-          onTap: widget.onTap,
-          customBorder: const _OctagonBorder(),
-          borderRadius: BorderRadius.circular(12),
-          focusColor: onColor.withValues(alpha: 0.24),
-          hoverColor: onColor.withValues(alpha: 0.12),
-          splashFactory: InkRipple.splashFactory,
-          onTapDown: (_) => _press(),
-          onTapUp: (_) => _release(),
-          onTapCancel: _release,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ScaleTransition(
-                scale: _scale,
-                child: _OctagonBody(
-                  size: widget.octagonSize,
-                  icon: widget.icon,
-                  color: base,
-                  accent: widget.accent,
-                  onColor: onColor,
-                ),
-              ),
-              const SizedBox(height: 6),
-              ExcludeSemantics(
-                child: SizedBox(
-                  width: widget.octagonSize + 18,
-                  child: Text(
-                    widget.label,
-                    textAlign: TextAlign.center,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: caption,
+        child: Semantics(
+          button: true,
+          label: effectiveLabel,
+          child: InkWell(
+            onTap: onTap,
+            customBorder: const _OctagonBorder(),
+            borderRadius: BorderRadius.circular(12),
+            // Draw the focus highlight above the octagon clip so it is never occluded.
+            focusColor: scheme.onPrimaryContainer.withOpacity(0.24),
+            hoverColor: scheme.onPrimaryContainer.withOpacity(0.12),
+            splashFactory: InkRipple.splashFactory,
+            child: SizedBox(
+              width: size,
+              height: size,
+              child: ClipPath(
+                clipper: const _OctagonClipper(),
+                child: Container(
+                  color: tileColor,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        icon,
+                        size: size * 0.34,
+                        color: scheme.onPrimaryContainer,
+                      ),
+                      const SizedBox(height: 4),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        // Exclude the inner Text from the semantics tree so the
+                        // tile's label isn't announced twice (Text + Semantics).
+                        child: ExcludeSemantics(
+                          child: Text(
+                            label,
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: size * 0.13,
+                              color: scheme.onPrimaryContainer,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// The raised octagon body: cast shadow + gradient sheen + outline.
-class _OctagonBody extends StatelessWidget {
-  const _OctagonBody({
-    required this.size,
-    required this.icon,
-    required this.color,
-    required this.accent,
-    required this.onColor,
-  });
-
-  final double size;
-  final IconData icon;
-  final Color color;
-  final Color? accent;
-  final Color onColor;
-
-  @override
-  Widget build(BuildContext context) {
-    const clipper = _OctagonClipper();
-    final edge = accent ?? onColor;
-    return Stack(
-      children: [
-        PhysicalShape(
-          clipper: clipper,
-          elevation: 6,
-          shadowColor: accent?.withValues(alpha: 0.45) ?? Colors.black45,
-          color: color,
-          // PhysicalShape clips its child to the octagon automatically.
-          child: Container(
-            width: size,
-            height: size,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color.lerp(color, Colors.white, 0.20)!, color],
               ),
             ),
             child: Center(

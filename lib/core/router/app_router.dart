@@ -1,28 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'routes.dart';
-
-/// Temporary landing page shown until feature routes are registered.
-class CorePlaceholderPage extends StatelessWidget {
-  const CorePlaceholderPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CircularProgressIndicator(),
-            SizedBox(height: 16),
-            Text('Quicky'),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 /// Central GoRouter instance.
 ///
@@ -30,12 +8,6 @@ class CorePlaceholderPage extends StatelessWidget {
 /// `RouteBase` entries to [appRoutes] (exported from `routes.dart`),
 /// which is referenced here. Keeps GoRouter centralization without edits.
 final GoRouter appRouter = GoRouter(
-  initialLocation: Routes.home,
-  routes: <RouteBase>[
-    GoRoute(
-      path: Routes.home,
-      builder: (context, state) => const CorePlaceholderPage(),
-    ),
-    ...appRoutes,
-  ],
+  initialLocation: Routes.splash,
+  routes: <RouteBase>[...appRoutes],
 );
