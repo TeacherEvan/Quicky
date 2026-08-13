@@ -16,7 +16,6 @@ class OctagonTile extends StatefulWidget {
     this.octagonSize = 68,
     this.color,
     this.accent,
-    this.labelStyle,
     this.semanticsLabel,
   });
 
@@ -32,9 +31,6 @@ class OctagonTile extends StatefulWidget {
 
   /// Optional screen-reader label; defaults to [label] when null (Task 11.4 a11y).
   final String? semanticsLabel;
-
-  /// Caption style for the label beneath the octagon.
-  final TextStyle? labelStyle;
 
   @override
   State<OctagonTile> createState() => _OctagonTileState();
@@ -64,51 +60,63 @@ class _OctagonTileState extends State<OctagonTile>
     final scheme = Theme.of(context).colorScheme;
     final base = widget.color ?? scheme.primaryContainer;
     final onColor = scheme.onPrimaryContainer;
-    final caption =
-        widget.labelStyle ??
-        TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
-          color: scheme.onSurfaceVariant,
-        );
+    final caption = TextStyle(
+      fontSize: 12,
+      fontWeight: FontWeight.w600,
+      color: scheme.onSurfaceVariant,
+    );
 
     return Semantics(
       button: true,
       label: widget.semanticsLabel ?? widget.label,
-      child: GestureDetector(
-        onTapDown: (_) => _press(),
-        onTapUp: (_) {
-          _release();
-          widget.onTap();
+      child: FocusableActionDetector(
+        mouseCursor: SystemMouseCursors.click,
+        actions: <Type, Action<Intent>>{
+          ActivateIntent: CallbackAction<ActivateIntent>(
+            onInvoke: (_) => widget.onTap(),
+          ),
+          ButtonActivateIntent: CallbackAction<ButtonActivateIntent>(
+            onInvoke: (_) => widget.onTap(),
+          ),
         },
-        onTapCancel: _release,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ScaleTransition(
-              scale: _scale,
-              child: _OctagonBody(
-                size: widget.octagonSize,
-                icon: widget.icon,
-                color: base,
-                accent: widget.accent,
-                onColor: onColor,
-              ),
-            ),
-            const SizedBox(height: 6),
-            ExcludeSemantics(
-              child: SizedBox(
-                width: widget.octagonSize + 18,
-                child: Text(
-                  widget.label,
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: caption,
+        child: InkWell(
+          onTap: widget.onTap,
+          customBorder: const _OctagonBorder(),
+          borderRadius: BorderRadius.circular(12),
+          focusColor: onColor.withValues(alpha: 0.24),
+          hoverColor: onColor.withValues(alpha: 0.12),
+          splashFactory: InkRipple.splashFactory,
+          onTapDown: (_) => _press(),
+          onTapUp: (_) => _release(),
+          onTapCancel: _release,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ScaleTransition(
+                scale: _scale,
+                child: _OctagonBody(
+                  size: widget.octagonSize,
+                  icon: widget.icon,
+                  color: base,
+                  accent: widget.accent,
+                  onColor: onColor,
                 ),
               ),
-            ),
-          ],
+              const SizedBox(height: 6),
+              ExcludeSemantics(
+                child: SizedBox(
+                  width: widget.octagonSize + 18,
+                  child: Text(
+                    widget.label,
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: caption,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -217,4 +225,39 @@ class _OctagonClipper extends CustomClipper<Path> {
 
   @override
   bool shouldReclip(_OctagonClipper old) => false;
+}
+
+class _OctagonBorder extends OutlinedBorder {
+  const _OctagonBorder();
+
+  @override
+  OutlinedBorder copyWith({BorderSide? side}) => this;
+
+  @override
+  EdgeInsetsGeometry get dimensions => EdgeInsets.zero;
+
+  @override
+  Path getOuterPath(Rect rect, {TextDirection? textDirection}) {
+    final c = rect.width * 0.29;
+    return Path()
+      ..moveTo(rect.left + c, rect.top)
+      ..lineTo(rect.right - c, rect.top)
+      ..lineTo(rect.right, rect.top + c)
+      ..lineTo(rect.right, rect.bottom - c)
+      ..lineTo(rect.right - c, rect.bottom)
+      ..lineTo(rect.left + c, rect.bottom)
+      ..lineTo(rect.left, rect.bottom - c)
+      ..lineTo(rect.left, rect.top + c)
+      ..close();
+  }
+
+  @override
+  Path getInnerPath(Rect rect, {TextDirection? textDirection}) =>
+      getOuterPath(rect);
+
+  @override
+  void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {}
+
+  @override
+  OutlinedBorder scale(double t) => this;
 }

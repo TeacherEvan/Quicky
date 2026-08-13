@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
@@ -87,5 +88,50 @@ void main() {
     // 8 feature tiles + 1 settings hub = 9 OctagonTile widgets.
     expect(find.byType(OctagonTile), findsNWidgets(9));
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('OctagonTile: no overflow at 320px and keyboard-activatable '
+      '(WCAG 2.1 AA)', (tester) async {
+    tester.view.physicalSize = const Size(320 * 3, 600 * 3); // 320 CSS px wide
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+
+    var taps = 0;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Center(
+            child: OctagonTile(
+              icon: Icons.star,
+              label: 'Star',
+              onTap: () => taps++,
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    // No layout overflow at a narrow (320px) width.
+    expect(tester.takeException(), isNull);
+
+    // Keyboard activation: the tile must be focusable and Enter/Space must
+    // fire onTap (this was the WCAG regression introduced by the polish layer).
+    final tile = find.byType(OctagonTile);
+    var focused = false;
+    for (var i = 0; i < 5 && !focused; i++) {
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.pumpAndSettle();
+      focused = tester.getSemantics(tile).hasFlag(SemanticsFlag.isFocused);
+    }
+    expect(focused, isTrue, reason: 'tile must be keyboard-focusable');
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    await tester.pumpAndSettle();
+    expect(taps, 1, reason: 'Enter should activate the tile');
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.space);
+    await tester.pumpAndSettle();
+    expect(taps, 2, reason: 'Space should activate the tile');
   });
 }

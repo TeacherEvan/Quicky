@@ -51,7 +51,10 @@ class _DashboardLayoutState extends State<DashboardLayout>
     // Scale the ring so the outermost octagon (plus its label) stays on-screen.
     final octSize = widget.tiles.first.octagonSize;
     final maxRadius = viewport / 2 - octSize - 20.0; // 20 = label + margin
-    final r = max(64.0, min(widget.radius, maxRadius));
+    final insets = mq.viewPadding;
+    final padV = (insets.top + insets.bottom) / 2;
+    final safeMax = maxRadius - padV;
+    final r = max(64.0, min(widget.radius, safeMax));
 
     // Brighter ring in dark mode so it stays visible on _darkSurface; faint in
     // light mode so it doesn't compete with the octagons.
@@ -100,8 +103,10 @@ class _DashboardLayoutState extends State<DashboardLayout>
       );
     }
 
-    return SizedBox.expand(
-      child: Stack(alignment: Alignment.center, children: placed),
+    return SafeArea(
+      child: SizedBox.expand(
+        child: Stack(alignment: Alignment.center, children: placed),
+      ),
     );
   }
 
