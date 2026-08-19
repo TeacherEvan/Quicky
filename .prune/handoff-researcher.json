@@ -1,0 +1,150 @@
+{
+  "user_prompt_analysis": {
+    "intent": "dead-code-removal",
+    "scope": "monorepo",
+    "aggressiveness": "conservative",
+    "constraints_from_user": []
+  },
+  "language_specific_practices": {
+    "unknown": {
+      "tools": [],
+      "patterns": [],
+      "entry_point_heuristics": []
+    },
+    "markdown": {
+      "tools": [],
+      "patterns": [],
+      "entry_point_heuristics": []
+    },
+    "yaml": {
+      "tools": [],
+      "patterns": [],
+      "entry_point_heuristics": []
+    },
+    "html": {
+      "tools": [],
+      "patterns": [],
+      "entry_point_heuristics": []
+    },
+    "json": {
+      "tools": [],
+      "patterns": [],
+      "entry_point_heuristics": []
+    },
+    "bash": {
+      "tools": [],
+      "patterns": [],
+      "entry_point_heuristics": []
+    },
+    "swift": {
+      "tools": [],
+      "patterns": [],
+      "entry_point_heuristics": []
+    },
+    "c": {
+      "tools": [],
+      "patterns": [],
+      "entry_point_heuristics": []
+    },
+    "cpp": {
+      "tools": [],
+      "patterns": [],
+      "entry_point_heuristics": []
+    },
+    "python": {
+      "tools": [
+        {
+          "name": "vulture",
+          "confidence": 0.85
+        },
+        {
+          "name": "pyflakes",
+          "confidence": 0.75
+        }
+      ],
+      "patterns": [
+        "__init__.py side effects",
+        "plugin entry points",
+        "click/typer CLI commands"
+      ],
+      "entry_point_heuristics": [
+        "main.py",
+        "app.py",
+        "cli.py",
+        "setup.py"
+      ]
+    },
+    "env": {
+      "tools": [],
+      "patterns": [],
+      "entry_point_heuristics": []
+    },
+    "java": {
+      "tools": [],
+      "patterns": [],
+      "entry_point_heuristics": []
+    },
+    "toml": {
+      "tools": [],
+      "patterns": [],
+      "entry_point_heuristics": []
+    },
+    "kotlin": {
+      "tools": [],
+      "patterns": [],
+      "entry_point_heuristics": []
+    }
+  },
+  "general_practices": [
+    {
+      "practice": "Start with one signal type (unused exports)",
+      "source": "repowise blog",
+      "priority": 1
+    },
+    {
+      "practice": "Sort by confidence, remove in small patches",
+      "source": "repowise blog",
+      "priority": 2
+    },
+    {
+      "practice": "Verify with production profiling before removing structural dead code",
+      "source": "FlagShark",
+      "priority": 3
+    },
+    {
+      "practice": "Check framework entry points before removing \"unreferenced\" files",
+      "source": "Knip docs",
+      "priority": 1
+    },
+    {
+      "practice": "Add guardrails: dry-run → stash → confirm → commit",
+      "source": "dcg pattern",
+      "priority": 0
+    }
+  ],
+  "tool_recommendations": [
+    {
+      "tool": "knip",
+      "install": "pnpm add -D knip",
+      "run": "knip --reporter=json",
+      "output_schema": "KnipReport"
+    },
+    {
+      "tool": "depcheck",
+      "install": "npx depcheck@7.16.4",
+      "run": "depcheck --json",
+      "output_schema": "DepcheckReport"
+    },
+    {
+      "tool": "bundle-analyzer",
+      "install": "@next/bundle-analyzer",
+      "run": "ANALYZE=true pnpm build",
+      "note": "visual bundle inspection"
+    }
+  ],
+  "future_proofing": {
+    "ci_integration": "Add knip to CI pipeline with --fail-on-issues",
+    "precommit_hook": "husky + lint-staged for knip",
+    "dependency_budget": "Set bundle size budgets in webpack/next.config"
+  }
+}
