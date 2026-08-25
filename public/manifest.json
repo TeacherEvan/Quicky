@@ -33,5 +33,71 @@
       "type": "image/png",
       "purpose": "maskable"
     }
+  ],
+  "shortcuts": [
+    {
+      "name": "Cost converter",
+      "short_name": "Cost",
+      "url": "/cost",
+      "icons": [
+        { "src": "/icons/Icon-192.png", "sizes": "192x192", "type": "image/png" }
+      ]
+    },
+    {
+      "name": "Location",
+      "short_name": "Location",
+      "url": "/location",
+      "icons": [
+        { "src": "/icons/Icon-192.png", "sizes": "192x192", "type": "image/png" }
+      ]
+    },
+    {
+      "name": "Bathroom finder",
+      "short_name": "Bathroom",
+      "url": "/bathroom",
+      "icons": [
+        { "src": "/icons/Icon-192.png", "sizes": "192x192", "type": "image/png" }
+      ]
+    },
+    {
+      "name": "Attractions",
+      "short_name": "Attractions",
+      "url": "/attractions",
+      "icons": [
+        { "src": "/icons/Icon-192.png", "sizes": "192x192", "type": "image/png" }
+      ]
+    },
+    {
+      "name": "Day counter",
+      "short_name": "Counter",
+      "url": "/counter",
+      "icons": [
+        { "src": "/icons/Icon-192.png", "sizes": "192x192", "type": "image/png" }
+      ]
+    },
+    {
+      "name": "Bolt",
+      "short_name": "Bolt",
+      "url": "/bolt",
+      "icons": [
+        { "src": "/icons/Icon-192.png", "sizes": "192x192", "type": "image/png" }
+      ]
+    },
+    {
+      "name": "Banking",
+      "short_name": "Banking",
+      "url": "/banking",
+      "icons": [
+        { "src": "/icons/Icon-192.png", "sizes": "192x192", "type": "image/png" }
+      ]
+    },
+    {
+      "name": "Weather",
+      "short_name": "Weather",
+      "url": "/weather",
+      "icons": [
+        { "src": "/icons/Icon-192.png", "sizes": "192x192", "type": "image/png" }
+      ]
+    }
   ]
 }

@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as accessLog from "../accessLog.js";
 import type * as geocode from "../geocode.js";
 import type * as http from "../http.js";
 import type * as places from "../places.js";
@@ -20,6 +21,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  accessLog: typeof accessLog;
   geocode: typeof geocode;
   http: typeof http;
   places: typeof places;

@@ -1,6 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useT } from "@/lib/i18n";
+import { Breadcrumb } from "@/components/Breadcrumb";
+import { Button } from "@/components/Button";
+import { Icon } from "@/components/Icon";
 
 interface Bank {
   name: string;
@@ -45,14 +49,15 @@ const BANKS: ReadonlyArray<Bank> = [
 ];
 
 export default function BankingPage() {
+  const t = useT();
   const [tried, setTried] = useState<string | null>(null);
 
   function launch(b: Bank) {
     setTried(b.name);
-    const t = Date.now();
+    const t0 = Date.now();
     const onBlur = () => {
+      void t0;
       window.removeEventListener("blur", onBlur);
-      void t;
     };
     window.addEventListener("blur", onBlur);
     window.location.href = b.scheme;
@@ -60,38 +65,49 @@ export default function BankingPage() {
 
   return (
     <article>
-      <h2>Banking</h2>
-      <p className="muted">
-        Tap a bank to open its app. On a device where the app is installed,
-        the bank&apos;s URL scheme is invoked. On desktop or where the app is
-        not installed, nothing happens.
-      </p>
-      <ul className="list">
+      <Breadcrumb
+        items={[
+          { label: t("app.nav.dashboard"), href: "/" },
+          { label: t("tile.banking.title") },
+        ]}
+      />
+      <header className="row" style={{ marginBottom: "var(--space-2)" }}>
+        <Icon name="bank" size={28} aria-hidden />
+        <h1 style={{ margin: 0 }}>{t("tile.banking.title")}</h1>
+      </header>
+      <p className="muted">{t("tile.banking.intro")}</p>
+
+      <ul className="list mt-3" aria-label={t("tile.banking.title")}>
         {BANKS.map((b) => (
-          <li key={b.package}>
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <div style={{ flex: 1 }}>
-                <strong>{b.name}</strong>
-                <div className="muted" style={{ fontFamily: "monospace" }}>
+          <li key={b.package} className="list-item">
+            <div className="row" style={{ alignItems: "center" }}>
+              <Icon name="bank" size={22} aria-hidden />
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div className="list-item-title">{b.name}</div>
+                <div
+                  className="list-item-meta"
+                  style={{ fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace" }}
+                >
                   {b.scheme}
                 </div>
               </div>
-              <button
-                className="button"
-                onClick={() => launch(b)}
-                type="button"
-              >
-                Open
-              </button>
+              <Button onClick={() => launch(b)} size="sm">
+                {t("tile.banking.open")}
+              </Button>
             </div>
           </li>
         ))}
       </ul>
+
       {tried ? (
-        <p className="muted">
-          Tried to open {tried}. If nothing happened, the app is not
-          installed.
-        </p>
+        <div
+          className="banner banner-info mt-4"
+          role="status"
+          aria-live="polite"
+        >
+          <Icon name="info" size={18} aria-hidden />
+          <span>{t("tile.banking.afterLaunch", { name: tried })}</span>
+        </div>
       ) : null}
     </article>
   );

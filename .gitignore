@@ -12,6 +12,10 @@
 .swiftpm/
 migrate_working_dir/
 
+# App telemetry logs (intentionally not version-controlled)
+.logs/
+convex/access.log
+
 # IDE
 *.iml
 *.ipr
@@ -33,3 +37,9 @@ next-env.d.ts.bak
 .agents/
 .claude/
 skills-lock.json
+
+# Test artifacts (Playwright + Vitest)
+coverage/
+playwright-report/
+test-results/
+playwright/.cache/

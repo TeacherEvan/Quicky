@@ -1,6 +1,14 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import "./state-ui.css";
 import { SettingsProvider } from "@/lib/settings";
+import { NetworkProvider } from "@/components/NetworkProvider";
+import { OfflineBanner } from "@/components/OfflineBanner";
+import GlobalErrorListeners from "@/components/GlobalErrorListeners";
+
+const CONVEX_SITE_URL = process.env.NEXT_PUBLIC_CONVEX_SITE_URL;
+
+const pwaBootstrap = `(function(){if(!('serviceWorker' in navigator)){return;}window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});var captured=false;function onPrompt(e){if(captured){return;}captured=true;try{window.__quickyInstallPrompt=e;}catch(err){}window.removeEventListener('beforeinstallprompt',onPrompt);}window.addEventListener('beforeinstallprompt',onPrompt);window.addEventListener('appinstalled',function(){window.__quickyInstallPrompt=undefined;});})();`;
 
 export const metadata: Metadata = {
   title: "Quicky — Thailand Travel Hub",
@@ -31,8 +39,35 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {CONVEX_SITE_URL ? (
+          <link
+            rel="preconnect"
+            href={CONVEX_SITE_URL}
+            crossOrigin="anonymous"
+          />
+        ) : null}
+        <link rel="dns-prefetch" href="//overpass-api.de" />
+        <link rel="dns-prefetch" href="//overpass.kumi.systems" />
+        <link rel="dns-prefetch" href="//overpass.private.coffee" />
+        <link rel="dns-prefetch" href="//maps.mail.ru" />
+        <link rel="dns-prefetch" href="//overpass.osm.ch" />
+        <link rel="dns-prefetch" href="//overpass.openstreetmap.fr" />
+        <script
+          dangerouslySetInnerHTML={{ __html: pwaBootstrap }}
+        />
+      </head>
       <body>
-        <SettingsProvider>{children}</SettingsProvider>
+        <SettingsProvider>
+          <NetworkProvider>
+            <a href="#main-content" className="skip-link">
+              Skip to main content
+            </a>
+            <OfflineBanner />
+            <GlobalErrorListeners />
+            {children}
+          </NetworkProvider>
+        </SettingsProvider>
       </body>
     </html>
   );

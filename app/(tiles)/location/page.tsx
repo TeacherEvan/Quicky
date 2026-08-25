@@ -1,7 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { getReverse } from "@/lib/convex";
+import { useT } from "@/lib/i18n";
+import { Breadcrumb } from "@/components/Breadcrumb";
+import { Loading } from "@/components/Loading";
+import { ErrorState } from "@/components/ErrorState";
+import { EmptyState } from "@/components/EmptyState";
+import { Icon } from "@/components/Icon";
 
 interface ExifGps {
   latitude: number;
@@ -18,12 +24,14 @@ async function readExif(file: File): Promise<ExifGps | null> {
 }
 
 export default function LocationPage() {
+  const t = useT();
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [label, setLabel] = useState<string | null>(null);
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   async function onPick(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0];
@@ -38,9 +46,7 @@ export default function LocationPage() {
     try {
       const gps = await readExif(f);
       if (!gps) {
-        setError(
-          "No GPS data in this image. Enable location on your camera, or pick another photo.",
-        );
+        setError(t("tile.location.noExif"));
         return;
       }
       const c = {
@@ -57,39 +63,85 @@ export default function LocationPage() {
     }
   }
 
+  function pickAgain() {
+    setError(null);
+    setLabel(null);
+    setCoords(null);
+    setFile(null);
+    setPreview(null);
+    if (inputRef.current) inputRef.current.value = "";
+    inputRef.current?.click();
+  }
+
   return (
     <article>
-      <h2>Location</h2>
-      <p className="muted">
-        Upload a photo with GPS metadata. The real coordinates are sent to
-        OpenStreetMap Nominatim via your Convex backend.
-      </p>
-      <input
-        type="file"
-        accept="image/*"
-        onChange={onPick}
-        aria-label="Pick a photo"
+      <Breadcrumb
+        items={[
+          { label: t("app.nav.dashboard"), href: "/" },
+          { label: t("tile.location.title") },
+        ]}
       />
-      {error ? (
-        <p className="error">{error}</p>
-      ) : null}
-      {loading ? <p className="muted">Reading EXIF + reverse-geocoding…</p> : null}
+      <header className="row" style={{ marginBottom: "var(--space-2)" }}>
+        <Icon name="pin" size={28} aria-hidden />
+        <h1 style={{ margin: 0 }}>{t("tile.location.title")}</h1>
+      </header>
+      <p className="muted">{t("tile.location.intro")}</p>
+
+      <div className="field mt-3">
+        <label className="field-label" htmlFor="location-photo">
+          {t("tile.location.pickPhoto")}
+        </label>
+        <input
+          ref={inputRef}
+          id="location-photo"
+          type="file"
+          accept="image/*"
+          onChange={onPick}
+          aria-describedby="location-help"
+        />
+        <span id="location-help" className="field-hint sr-only">
+          {t("tile.location.intro")}
+        </span>
+      </div>
+
+      <div className="mt-4" role="status" aria-live="polite">
+        {error ? (
+          <ErrorState
+            title={t("common.errorTitle")}
+            detail={error}
+            onRetry={pickAgain}
+          />
+        ) : loading ? (
+          <Loading size="lg" label={t("tile.location.reading")} />
+        ) : null}
+      </div>
+
       {preview ? (
         <p>
           <img
             src={preview}
-            alt={file ? `Selected: ${file.name}` : "Selected"}
-            style={{ maxWidth: "100%", borderRadius: 8, marginTop: 12 }}
+            alt={file ? t("tile.location.previewAlt") : t("tile.location.previewAlt")}
+            className="preview-img"
           />
         </p>
       ) : null}
+
       {coords && label ? (
-        <section className="card">
-          <p style={{ fontSize: 18, margin: 0 }}>{label}</p>
-          <p className="muted">
-            {coords.lat.toFixed(4)}, {coords.lng.toFixed(4)}
+        <section className="card mt-3" aria-labelledby="location-result">
+          <h2 id="location-result" style={{ margin: 0 }}>{label}</h2>
+          <p className="muted" style={{ margin: "var(--space-2) 0 0" }}>
+            {t("tile.location.coords")}: {coords.lat.toFixed(4)}, {coords.lng.toFixed(4)}
           </p>
         </section>
+      ) : null}
+
+      {!preview && !loading && !error ? (
+        <EmptyState
+          className="mt-4"
+          iconName="camera"
+          title={t("tile.location.pickPhoto")}
+          body={t("tile.location.intro")}
+        />
       ) : null}
     </article>
   );

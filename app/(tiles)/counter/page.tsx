@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useT } from "@/lib/i18n";
+import { Breadcrumb } from "@/components/Breadcrumb";
+import { Icon } from "@/components/Icon";
 
 const KEY = "quicky.counter.v1";
 
@@ -28,6 +31,7 @@ function diffDays(iso: string): number | null {
 }
 
 export default function CounterPage() {
+  const t = useT();
   const [target, setTarget] = useState<string>("");
   const [hydrated, setHydrated] = useState(false);
 
@@ -49,37 +53,57 @@ export default function CounterPage() {
 
   return (
     <article>
-      <h2>Day counter</h2>
-      <p className="muted">
-        Pick a future date. Days remaining is computed locally in your
-        browser.
-      </p>
-      <p>
-        <label>
-          Target date:&nbsp;
-          <input
-            type="date"
-            value={target}
-            onChange={(e) => setTarget(e.target.value)}
-          />
+      <Breadcrumb
+        items={[
+          { label: t("app.nav.dashboard"), href: "/" },
+          { label: t("tile.counter.title") },
+        ]}
+      />
+      <header className="row" style={{ marginBottom: "var(--space-2)" }}>
+        <Icon name="counter" size={28} aria-hidden />
+        <h1 style={{ margin: 0 }}>{t("tile.counter.title")}</h1>
+      </header>
+      <p className="muted">{t("tile.counter.intro")}</p>
+
+      <div className="field mt-3" style={{ maxWidth: 280 }}>
+        <label className="field-label" htmlFor="counter-target">
+          {t("tile.counter.targetLabel")}
         </label>
-      </p>
+        <input
+          id="counter-target"
+          type="date"
+          value={target}
+          onChange={(e) => setTarget(e.target.value)}
+        />
+      </div>
+
       {days === null ? (
-        <p className="muted">No target set.</p>
+        <p className="muted mt-3">{t("tile.counter.noTarget")}</p>
       ) : days > 0 ? (
-        <section className="card" aria-live="polite">
-          <p style={{ fontSize: 64, margin: 0, fontWeight: 600 }}>{days}</p>
-          <p className="muted">days remaining</p>
+        <section
+          className="card mt-3"
+          aria-live="polite"
+          aria-atomic="true"
+          aria-label={t("tile.counter.daysRemaining")}
+        >
+          <p className="hero-number">{days}</p>
+          <p className="muted">{t("tile.counter.daysRemaining")}</p>
         </section>
       ) : days === 0 ? (
-        <section className="card">
-          <p style={{ fontSize: 28, margin: 0 }}>Today is the day.</p>
+        <section className="card mt-3" aria-live="polite" aria-atomic="true">
+          <p className="hero-number" style={{ fontSize: "var(--fs-6)" }}>
+            {t("tile.counter.today")}
+          </p>
         </section>
       ) : (
-        <section className="card">
+        <section className="card mt-3" aria-live="polite" aria-atomic="true">
           <p className="muted">
-            That date is {Math.abs(days)} day{Math.abs(days) === 1 ? "" : "s"}{" "}
-            in the past.
+            {t(
+              Math.abs(days) === 1
+                ? "tile.counter.pastOne"
+                : "tile.counter.pastMany",
+              { n: Math.abs(days) },
+            )}
           </p>
         </section>
       )}

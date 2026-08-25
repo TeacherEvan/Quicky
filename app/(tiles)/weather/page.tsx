@@ -2,10 +2,19 @@
 
 import { useEffect, useRef, useState } from "react";
 import { getWeather, type WeatherSnapshot } from "@/lib/convex";
-import { useSettings } from "@/lib/settings";
+import { useSettings, type Units } from "@/lib/settings";
+import { useT } from "@/lib/i18n";
+import { Breadcrumb } from "@/components/Breadcrumb";
+import { Button } from "@/components/Button";
+import { Loading } from "@/components/Loading";
+import { ErrorState } from "@/components/ErrorState";
+import { EmptyState } from "@/components/EmptyState";
+import { Icon } from "@/components/Icon";
+import { LiveDot } from "@/components/LiveDot";
 
 export default function WeatherPage() {
   const { units, setUnits } = useSettings();
+  const t = useT();
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(
     null,
   );
@@ -39,7 +48,7 @@ export default function WeatherPage() {
 
   function useMyLocation() {
     if (!("geolocation" in navigator)) {
-      setError("Your browser does not expose geolocation.");
+      setError(t("tile.weather.error.geoUnsupported"));
       return;
     }
     setError(null);
@@ -53,7 +62,7 @@ export default function WeatherPage() {
       },
       (err) => {
         setLoading(false);
-        setError(`Geolocation denied or failed: ${err.message}`);
+        setError(t("tile.weather.error.geoFailed", { message: err.message }));
       },
       { enableHighAccuracy: false, timeout: 8000 },
     );
@@ -63,61 +72,119 @@ export default function WeatherPage() {
     setCoords({ lat: 13.7563, lng: 100.5018 });
   }
 
+  function retry() {
+    if (coords) {
+      setCoords({ ...coords });
+    } else {
+      useBangkok();
+    }
+  }
+
+  const forecastIcon = (c: string): React.ReactNode => {
+    const l = c.toLowerCase();
+    if (l.includes("rain") || l.includes("shower")) return <Icon name="rain" size={22} aria-hidden />;
+    if (l.includes("cloud") || l.includes("overcast")) return <Icon name="cloud" size={22} aria-hidden />;
+    return <Icon name="sun" size={22} aria-hidden />;
+  };
+
   return (
     <article>
-      <h2>Weather</h2>
-      <p className="muted">
-        Live data from Open-Meteo via your Convex backend. No cached or sample
-        values.
-      </p>
-      <div className="row">
-        <button className="button" onClick={useMyLocation} type="button">
-          Use my location
-        </button>
-        <button
-          className="button secondary"
-          onClick={useBangkok}
-          type="button"
-        >
-          Bangkok
-        </button>
+      <Breadcrumb
+        items={[
+          { label: t("app.nav.dashboard"), href: "/" },
+          { label: t("tile.weather.title") },
+        ]}
+      />
+      <header className="row" style={{ marginBottom: "var(--space-2)" }}>
+        <Icon name="sun" size={28} aria-hidden />
+        <h1 style={{ margin: 0 }}>{t("tile.weather.title")}</h1>
+        <span className="spacer" />
+        <LiveDot label={t("tile.weather.live")} />
+      </header>
+      <p className="muted">{t("tile.weather.intro")}</p>
+
+      <div className="row mt-3">
+        <Button onClick={useMyLocation} iconName="pin">
+          {t("tile.weather.useLocation")}
+        </Button>
+        <Button variant="secondary" onClick={useBangkok}>
+          {t("tile.weather.bangkok")}
+        </Button>
       </div>
-      <p>
-        <label>
-          Units:&nbsp;
-          <select
-            value={units}
-            onChange={(e) => setUnits(e.target.value as "C" | "F")}
-          >
-            <option value="C">Celsius</option>
-            <option value="F">Fahrenheit</option>
-          </select>
+
+      <div className="field mt-3" style={{ maxWidth: 280 }}>
+        <label className="field-label" htmlFor="weather-units">
+          {t("tile.weather.units")}
         </label>
-      </p>
-      {error ? <p className="error">{error}</p> : null}
-      {loading ? <p className="muted">Loading…</p> : null}
+        <select
+          id="weather-units"
+          value={units}
+          onChange={(e) => setUnits(e.target.value as Units)}
+        >
+          <option value="C">{t("tile.weather.celsius")}</option>
+          <option value="F">{t("tile.weather.fahrenheit")}</option>
+        </select>
+      </div>
+
+      <div className="mt-4" role="status" aria-live="polite">
+        {error ? (
+          <ErrorState
+            title={t("common.errorTitle")}
+            detail={error}
+            onRetry={retry}
+          />
+        ) : loading ? (
+          <Loading size="lg" label={t("common.loading")} />
+        ) : null}
+      </div>
+
       {snapshot && !loading ? (
-        <section className="card">
-          <p style={{ fontSize: 48, margin: 0, fontWeight: 600 }}>
+        <section className="card mt-3" aria-labelledby="weather-now">
+          <h2 id="weather-now" className="sr-only">
+            {t("tile.weather.title")}
+          </h2>
+          <p className="hero-number" aria-label={`${t("tile.weather.title")} ${
+            units === "F" ? Math.round(snapshot.tempF) : Math.round(snapshot.tempC)
+          } ${units === "F" ? t("tile.weather.fahrenheit") : t("tile.weather.celsius")}`}>
             {units === "F"
               ? `${Math.round(snapshot.tempF)}°F`
               : `${Math.round(snapshot.tempC)}°C`}
           </p>
-          <p className="muted">{snapshot.condition}</p>
+          <p className="muted" style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            {forecastIcon(snapshot.condition)}
+            <span>{snapshot.condition}</span>
+          </p>
           {coords ? (
             <p className="muted">
-              Lat {coords.lat}, Lng {coords.lng}
+              {t("tile.weather.coords")}: {coords.lat}, {coords.lng}
             </p>
           ) : null}
-          <div className="forecast" aria-label="3-day forecast">
+        </section>
+      ) : null}
+
+      {snapshot && !loading ? (
+        <section className="mt-3" aria-labelledby="weather-forecast">
+          <h2 id="weather-forecast">{t("tile.weather.forecast")}</h2>
+          <div className="forecast">
             {snapshot.forecast.map((f, i) => (
-              <div key={i} className="day">
-                <div className="muted">Day {i + 1}</div>
-                <div style={{ fontSize: 20, fontWeight: 500 }}>{f}</div>
+              <div key={i} className="forecast-day">
+                <div className="forecast-day-label">
+                  {t("tile.weather.dayN", { n: i + 1 })}
+                </div>
+                <div className="forecast-day-value">{f}</div>
               </div>
             ))}
           </div>
         </section>
+      ) : null}
+
+      {!coords && !loading && !error ? (
+        <EmptyState
+          className="mt-4"
+          iconName="pin"
+          title={t("tile.weather.useLocation")}
+          body={t("tile.weather.bangkok")}
+        />
       ) : null}
     </article>
   );

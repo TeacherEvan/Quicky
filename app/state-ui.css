@@ -1,0 +1,154 @@
+/* Loading + error + offline states.
+   Kept in a separate file so the design-system subagent can replace these
+   primitives without touching `globals.css`. Tokens here deliberately mirror
+   the values already in `app/globals.css`. */
+
+@keyframes quicky-shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.skeleton {
+  display: block;
+  background: linear-gradient(
+    90deg,
+    var(--bg-elev) 0%,
+    var(--border) 40%,
+    var(--bg-elev) 80%
+  );
+  background-size: 200px 100%;
+  background-repeat: no-repeat;
+  border-radius: var(--radius-sm);
+  animation: quicky-shimmer 1.4s linear infinite;
+  color: transparent;
+}
+
+.skeleton--text {
+  height: 0.9em;
+  margin: 6px 0;
+}
+
+.skeleton--title {
+  height: 1.6em;
+  width: 60%;
+  margin: 6px 0;
+}
+
+.skeleton--block {
+  height: 96px;
+  width: 100%;
+}
+
+.skeleton--row {
+  height: 56px;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.skeleton--big {
+  height: 72px;
+  width: 50%;
+  margin: 8px 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}
+
+.alert-error {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--danger);
+  background: rgba(192, 57, 43, 0.08);
+  border: 1px solid rgba(192, 57, 43, 0.3);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  font-size: 14px;
+}
+
+.alert-error h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--danger);
+}
+
+.alert-error p {
+  margin: 0;
+  color: var(--text);
+}
+
+.alert-error .muted {
+  color: var(--text-muted);
+}
+
+.alert-error__actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.offline-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 16px;
+  background: var(--warn);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.offline-banner__msg {
+  flex: 1;
+  min-width: 0;
+}
+
+.offline-banner__close {
+  background: transparent;
+  color: #fff;
+  border: none;
+  font-size: 20px;
+  line-height: 1;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.offline-banner__close:hover,
+.offline-banner__close:focus-visible {
+  background: rgba(255, 255, 255, 0.15);
+  outline: none;
+}
+
+.error-page {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
+  gap: 12px;
+}
+
+.error-page h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.error-page p {
+  margin: 0;
+  color: var(--text-muted);
+  max-width: 480px;
+}

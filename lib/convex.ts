@@ -5,6 +5,10 @@
  *
  * No mocks. No fallbacks. If the network call fails, the error propagates
  * to the UI which displays it to the user.
+ *
+ * A small module-level cache (30s TTL) deduplicates identical in-flight
+ * requests and reuses fresh data across components. Callers may still
+ * pass their own AbortSignal — the signal is not cached.
  */
 
 const SITE_URL = process.env.NEXT_PUBLIC_CONVEX_SITE_URL;
@@ -15,6 +19,8 @@ if (!SITE_URL) {
     "[convex] NEXT_PUBLIC_CONVEX_SITE_URL is not set — API calls will fail.",
   );
 }
+
+const CACHE_TTL_MS = 30_000;
 
 export class ConvexError extends Error {
   status: number;
@@ -41,20 +47,75 @@ function url(path: string, params?: Record<string, string | number>): string {
   return u.toString();
 }
 
-async function getJson<T>(
+function stableHash(value: unknown): string {
+  if (value === null || typeof value !== "object") {
+    return JSON.stringify(value);
+  }
+  if (Array.isArray(value)) {
+    return `[${value.map(stableHash).join(",")}]`;
+  }
+  const obj = value as Record<string, unknown>;
+  const keys = Object.keys(obj).sort();
+  return `{${keys.map((k) => `${JSON.stringify(k)}:${stableHash(obj[k])}`).join(",")}}`;
+}
+
+interface CacheEntry<T> {
+  expiresAt: number;
+  promise: Promise<T>;
+  data?: T;
+}
+
+const cache = new Map<string, CacheEntry<unknown>>();
+
+export function _cacheBust(): void {
+  cache.clear();
+}
+
+function dedupedFetch<T>(
+  cacheKey: string,
   path: string,
   params?: Record<string, string | number>,
   signal?: AbortSignal,
 ): Promise<T> {
-  const res = await fetch(url(path, params), { signal, cache: "no-store" });
-  if (!res.ok) {
-    const text = await res.text().catch(() => "");
-    throw new ConvexError(
-      `Backend ${res.status}: ${text || res.statusText}`,
-      res.status,
-    );
+  const now = Date.now();
+  const existing = cache.get(cacheKey) as CacheEntry<T> | undefined;
+
+  if (existing && existing.expiresAt > now) {
+    if (existing.data !== undefined) {
+      return Promise.resolve(existing.data);
+    }
+    return existing.promise;
   }
-  return (await res.json()) as T;
+
+  const promise = (async () => {
+    const res = await fetch(url(path, params), { signal, cache: "no-store" });
+    if (!res.ok) {
+      const text = await res.text().catch(() => "");
+      throw new ConvexError(
+        `Backend ${res.status}: ${text || res.statusText}`,
+        res.status,
+      );
+    }
+    return (await res.json()) as T;
+  })();
+
+  promise
+    .then((data) => {
+      const entry = cache.get(cacheKey) as CacheEntry<T> | undefined;
+      if (entry && entry.promise === promise) {
+        entry.data = data;
+        entry.expiresAt = Date.now() + CACHE_TTL_MS;
+      }
+    })
+    .catch(() => {
+      const entry = cache.get(cacheKey) as CacheEntry<T> | undefined;
+      if (entry && entry.promise === promise) {
+        cache.delete(cacheKey);
+      }
+    });
+
+  cache.set(cacheKey, { promise, expiresAt: now + CACHE_TTL_MS });
+  return promise;
 }
 
 export interface WeatherSnapshot {
@@ -70,9 +131,11 @@ export function getWeather(
   units: "C" | "F",
   signal?: AbortSignal,
 ): Promise<WeatherSnapshot> {
-  return getJson<WeatherSnapshot>(
+  const params = { lat, lng, units };
+  return dedupedFetch<WeatherSnapshot>(
+    `weather:${stableHash(params)}`,
     "/api/weather",
-    { lat, lng, units },
+    params,
     signal,
   );
 }
@@ -90,9 +153,11 @@ export function getPlaces(
   radiusKm: number,
   signal?: AbortSignal,
 ): Promise<{ places: Attraction[] }> {
-  return getJson<{ places: Attraction[] }>(
+  const params = { lat, lng, radius: radiusKm };
+  return dedupedFetch<{ places: Attraction[] }>(
+    `places:${stableHash(params)}`,
     "/api/places",
-    { lat, lng, radius: radiusKm },
+    params,
     signal,
   );
 }
@@ -102,9 +167,11 @@ export function getReverse(
   lng: number,
   signal?: AbortSignal,
 ): Promise<{ label: string }> {
-  return getJson<{ label: string }>(
+  const params = { lat, lng };
+  return dedupedFetch<{ label: string }>(
+    `reverse:${stableHash(params)}`,
     "/api/reverse",
-    { lat, lng },
+    params,
     signal,
   );
 }

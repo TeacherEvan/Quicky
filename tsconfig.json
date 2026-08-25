@@ -38,6 +38,8 @@
   "exclude": [
     "node_modules",
     ".next",
-    "out"
+    "out",
+    "tests/**",
+    "vitest.config.ts"
   ]
 }

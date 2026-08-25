@@ -1,21 +1,24 @@
 "use client";
 
 import { useState } from "react";
+import { useT } from "@/lib/i18n";
+import { Breadcrumb } from "@/components/Breadcrumb";
+import { Button } from "@/components/Button";
+import { Icon } from "@/components/Icon";
 
 const SCHEME = "boltd://";
 const TARGET = "home";
 
 export default function BoltPage() {
+  const t = useT();
   const [attempted, setAttempted] = useState(false);
 
   function launch() {
     setAttempted(true);
     const url = `${SCHEME}${TARGET}`;
-    const t = Date.now();
+    const t0 = Date.now();
     const onBlur = () => {
-      if (Date.now() - t < 1500) {
-        // Browser may have opened the app; nothing to do.
-      }
+      void t0;
       window.removeEventListener("blur", onBlur);
     };
     window.addEventListener("blur", onBlur);
@@ -24,23 +27,33 @@ export default function BoltPage() {
 
   return (
     <article>
-      <h2>Bolt</h2>
-      <p className="muted">
-        Opens the Bolt app via the <code>boltd://</code> URL scheme. Only
-        works on a device where Bolt is installed; on desktop or where the
-        scheme is unregistered, nothing happens.
-      </p>
-      <p>
-        <button className="button" onClick={launch} type="button">
-          Open Bolt
-        </button>
-      </p>
+      <Breadcrumb
+        items={[
+          { label: t("app.nav.dashboard"), href: "/" },
+          { label: t("tile.bolt.title") },
+        ]}
+      />
+      <header className="row" style={{ marginBottom: "var(--space-2)" }}>
+        <Icon name="bolt" size={28} aria-hidden />
+        <h1 style={{ margin: 0 }}>{t("tile.bolt.title")}</h1>
+      </header>
+      <p className="muted">{t("tile.bolt.intro")}</p>
+
+      <div className="mt-3">
+        <Button onClick={launch} iconName="bolt">
+          {t("tile.bolt.open")}
+        </Button>
+      </div>
+
       {attempted ? (
-        <p className="muted">
-          If Bolt is installed on this device, the app should now be opening.
-          If nothing happened, Bolt is not installed — install it from your
-          app store and try again.
-        </p>
+        <div
+          className="banner banner-info mt-4"
+          role="status"
+          aria-live="polite"
+        >
+          <Icon name="info" size={18} aria-hidden />
+          <span>{t("tile.bolt.afterLaunch")}</span>
+        </div>
       ) : null}
     </article>
   );
