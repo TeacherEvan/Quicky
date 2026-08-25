@@ -46,3 +46,14 @@ app.*.map.json
 
 # Flutter DevTools generated settings
 /devtools_options.yaml
+.vercel
+
+.env.local
+
+# Node / Convex CLI toolchain (tracked via package.json + package-lock.json)
+node_modules/
+
+# Opencode / Claude agent caches (local, not part of the project)
+.agents/
+.claude/
+skills-lock.json
