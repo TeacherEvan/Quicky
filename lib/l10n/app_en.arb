@@ -31,6 +31,8 @@
   "sectionWeather": "Weather",
   "sectionAppLaunchers": "App Launchers",
   "launchersNote": "Only installed apps are offered. No store links.",
+  "installQuickyTitle": "Install Quicky",
+  "installQuickySubtitle": "Add Quicky to your home screen",
   "sectionPrivacy": "Privacy",
   "privacyComing": "Analytics opt-out (coming)",
   "sectionAbout": "About",

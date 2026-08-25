@@ -59,8 +59,9 @@ class _LoadingSplashState extends State<LoadingSplash> {
 
   @override
   void dispose() {
-    _controller.removeListener(_onVideoProgress);
-    _controller.dispose();
+    _controller
+      ..removeListener(_onVideoProgress)
+      ..dispose();
     super.dispose();
   }
 
@@ -76,14 +77,15 @@ class _LoadingSplashState extends State<LoadingSplash> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _controller.value.isInitialized
-                  ? AspectRatio(
-                      aspectRatio:
-                          _controller.value.size.width /
-                          _controller.value.size.height,
-                      child: VideoPlayer(_controller),
-                    )
-                  : const CircularProgressIndicator(),
+              if (_controller.value.isInitialized)
+                AspectRatio(
+                  aspectRatio:
+                      _controller.value.size.width /
+                      _controller.value.size.height,
+                  child: VideoPlayer(_controller),
+                )
+              else
+                const CircularProgressIndicator(),
               const SizedBox(height: 24),
               if (widget.label != null)
                 Text(

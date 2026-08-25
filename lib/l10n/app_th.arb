@@ -31,6 +31,8 @@
   "sectionWeather": "สภาพอากาศ",
   "sectionAppLaunchers": "แอปที่เปิดได้",
   "launchersNote": "เสนอเฉพาะแอปที่ติดตั้งแล้ว ไม่มีลิงก์ร้านค้า",
+  "installQuickyTitle": "ติดตั้ง Quicky",
+  "installQuickySubtitle": "เพิ่ม Quicky ไปยังหน้าจอหลัก",
   "sectionPrivacy": "ความเป็นส่วนตัว",
   "privacyComing": "ปิดการวิเคราะห์ (เร็วๆ นี้)",
   "sectionAbout": "เกี่ยวกับ",

@@ -1,11 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quicky/features/settings/settings_controller.dart';
 
 import 'services/weather_service.dart';
 
 /// Controller for Weather: holds the latest snapshot + loading flag.
 final weatherControllerProvider =
     StateNotifierProvider<WeatherController, WeatherState>((ref) {
-      return WeatherController();
+      return WeatherController(ref);
     });
 
 class WeatherState {
@@ -23,11 +24,14 @@ class WeatherState {
 }
 
 class WeatherController extends StateNotifier<WeatherState> {
-  WeatherController() : super(const WeatherState());
+  WeatherController(this._ref) : super(const WeatherState());
+
+  final Ref _ref;
 
   Future<void> load() async {
     state = state.copyWith(loading: true);
-    final snap = await WeatherService().fetch(13.7563, 100.5018);
+    final units = _ref.read(settingsControllerProvider).weatherUnits;
+    final snap = await WeatherService().fetch(13.7563, 100.5018, units: units);
     state = state.copyWith(snapshot: snap, loading: false);
   }
 }

@@ -1,7 +1,11 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quicky/core/l10n/app_localizations.dart';
 import 'package:quicky/features/settings/settings_controller.dart';
+import 'package:quicky/shared/pwa/pwa_bridge.dart';
 
 /// Settings sections. One widget per section; all read/write the shared
 /// SettingsController so prefs persist app-wide.
@@ -17,7 +21,7 @@ class SettingsSections {
       // 1. Appearance
       SectionHeader(title: l10n.sectionAppearance),
       DropdownButtonFormField<String>(
-        value: s.themeMode,
+        initialValue: s.themeMode,
         items: [
           DropdownMenuItem(value: 'system', child: Text(l10n.themeSystem)),
           DropdownMenuItem(value: 'light', child: Text(l10n.themeLight)),
@@ -27,7 +31,7 @@ class SettingsSections {
         decoration: InputDecoration(labelText: l10n.settingTheme),
       ),
       DropdownButtonFormField<String>(
-        value: s.language,
+        initialValue: s.language,
         items: [
           DropdownMenuItem(value: 'en', child: Text(l10n.langEnglish)),
           DropdownMenuItem(value: 'th', child: Text(l10n.langThai)),
@@ -64,6 +68,15 @@ class SettingsSections {
         title: const Text('BOLT / Banking'),
         subtitle: Text(l10n.launchersNote),
       ),
+      // 4b. PWA install (web only): offered when the browser captured the
+      // beforeinstallprompt event; hidden everywhere else.
+      if (kIsWeb && pwaCanPromptInstall())
+        ListTile(
+          leading: const Icon(Icons.install_mobile),
+          title: Text(l10n.installQuickyTitle),
+          subtitle: Text(l10n.installQuickySubtitle),
+          onTap: () => unawaited(pwaPromptInstall()),
+        ),
       // 5-8. Placeholders for privacy/about/clear
       SectionHeader(title: l10n.sectionPrivacy),
       ListTile(title: Text(l10n.privacyComing)),
@@ -85,4 +98,11 @@ class SectionHeader extends StatelessWidget {
       child: Text(title, style: Theme.of(context).textTheme.titleSmall),
     );
   }
+}
+
+/// Install-row strings. Keys live in app_en.arb / app_th.arb; resolved via
+/// `translate()` because lib/core/l10n is owned elsewhere.
+extension _InstallL10n on AppLocalizations {
+  String get installQuickyTitle => translate('installQuickyTitle');
+  String get installQuickySubtitle => translate('installQuickySubtitle');
 }

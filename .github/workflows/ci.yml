@@ -29,3 +29,6 @@ jobs:
 
       - name: Build release APK
         run: flutter build apk --release
+      - name: Build release web (PWA)
+        # Vercel deploys this exact target; a broken web build fails CI.
+        run: flutter build web --release

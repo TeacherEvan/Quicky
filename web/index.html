@@ -18,19 +18,31 @@
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+  <meta name="description" content="Eight handy Thailand-travel tools — cost converter, location, bathrooms, attractions, day counter, Bolt, banking and weather — in one installable app.">
+
+  <!-- PWA / brand -->
+  <meta name="theme-color" content="#5B3DF5">
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="quicky">
+  <meta name="apple-mobile-web-app-title" content="Quicky">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>quicky</title>
+  <title>Quicky — Thailand Travel Hub</title>
   <link rel="manifest" href="manifest.json">
+
+  <!-- Capture the browser install offer early so the Settings "Install
+       Quicky" row can consume it later (lib/shared/pwa/pwa_bridge_web.dart). -->
+  <script>
+    window.addEventListener('beforeinstallprompt', function (event) {
+      event.preventDefault();
+      window.__quickyInstallPrompt = event;
+    });
+  </script>
 </head>
 <body>
   <!--

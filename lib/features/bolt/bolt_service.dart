@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:installed_apps/installed_apps.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -13,8 +14,10 @@ class BoltService {
   static const packageId = 'ee.mtakso.client';
   static const scheme = 'boltd://'; // community-reported, verify on-device
 
-  /// Returns true if BOLT is installed.
+  /// Returns true if BOLT is installed. Web cannot detect installed apps;
+  /// treat the app as launchable (best-effort scheme hand-off below).
   Future<bool> isInstalled() async {
+    if (kIsWeb) return true;
     try {
       return await InstalledApps.isAppInstalled(packageId) ?? false;
     } catch (_) {
@@ -25,8 +28,7 @@ class BoltService {
   /// Launches BOLT if installed. Returns false if not installed.
   Future<bool> launch() async {
     if (!await isInstalled()) return false;
-    // Android: intent with package opens that specific installed app.
-    final uri = Uri.parse('${scheme}home');
+    final uri = Uri.parse(kIsWeb ? scheme : '${scheme}home');
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
       return true;
