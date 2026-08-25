@@ -55,11 +55,16 @@ export const weatherHandler = httpAction(async (_ctx, request) => {
     if (units === "F") params.set("temperature_unit", "fahrenheit");
     const res = await fetch(`https://api.open-meteo.com/v1/forecast?${params}`);
     if (!res.ok) throw new Error("upstream");
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const data = (await res.json()) as any;
-    const value = Number(data.current.temperature_2m);
-    const code = Number(data.current.weather_code);
-    const maxes: number[] = ((data.daily.temperature_2m_max ?? []) as unknown[])
+    const data = (await res.json()) as {
+      current?: { temperature_2m?: number; weather_code?: number };
+      daily?: { temperature_2m_max?: number[] };
+    };
+    const current = data.current;
+    const daily = data.daily;
+    if (!current || !daily) throw new Error("upstream: empty payload");
+    const value = Number(current.temperature_2m);
+    const code = Number(current.weather_code);
+    const maxes: number[] = ((daily.temperature_2m_max ?? []) as unknown[])
       .slice(0, 3)
       .map(Number);
     const tempC = units === "F" ? ((value - 32) * 5) / 9 : value;

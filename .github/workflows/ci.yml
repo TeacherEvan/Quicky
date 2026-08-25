@@ -1,36 +1,26 @@
-name: CI
-
+name: ci
 on:
   push:
-    branches: [master]
+    branches: [master, main, feat/**]
   pull_request:
-    branches: [master]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_CONVEX_SITE_URL: https://glad-mongoose-104.convex.site
     steps:
       - uses: actions/checkout@v4
-      - uses: subosito/flutter-action@v2
+      - uses: actions/setup-node@v4
         with:
-          flutter-version: '3.44.x'
-          channel: 'stable'
-      - name: Install dependencies
-        run: flutter pub get
-      - name: Verify formatting
-        run: dart format --output=none --set-exit-if-changed lib test
-      - name: Analyze
-        # very_good_analysis emits 190+ info-level lints (doc-comment nits);
-        # they are shown locally but not treated as fatal so CI gates on real
-        # errors/warnings only. Run `dart analyze --fatal-infos` locally to see them.
-        run: flutter analyze --no-fatal-infos
-      - name: Run tests
-        run: flutter test --coverage
-
-      - name: Build release APK
-        run: flutter build apk --release
-      - name: Build release web (PWA)
-        # Vercel deploys this exact target; a broken web build fails CI.
-        run: flutter build web --release
-      - name: Smoke gate (JSON configs + served build entrypoints)
-        run: chmod +x tool/smoke.sh && ./tool/smoke.sh
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run build
+      - name: Smoke (live Convex weather probe)
+        run: |
+          body=$(curl -sS -m 20 "$NEXT_PUBLIC_CONVEX_SITE_URL/api/weather?lat=13.7563&lng=100.5018&units=C" || true)
+          echo "weather: $body"
+          echo "$body" | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{const j=JSON.parse(s);if(typeof j.tempC!=='number'){process.exit(1)}})"

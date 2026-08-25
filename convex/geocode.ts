@@ -18,8 +18,7 @@ export const reverseHandler = httpAction(async (_ctx, request) => {
       headers: { "User-Agent": "QuickyTravelHub/1.0" },
     });
     if (!res.ok) throw new Error("upstream");
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const data = (await res.json()) as any;
+    const data = (await res.json()) as { display_name?: string };
     const displayName = String(data.display_name ?? "");
     if (displayName === "") throw new Error("empty");
     const label = displayName.split(",").slice(0, 3).join(",").trim();

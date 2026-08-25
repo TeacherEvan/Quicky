@@ -1,4 +1,4 @@
-# Miscellaneous
+# Misc
 *.class
 *.log
 *.pyc
@@ -12,48 +12,24 @@
 .swiftpm/
 migrate_working_dir/
 
-# IntelliJ related
+# IDE
 *.iml
 *.ipr
 *.iws
 .idea/
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
-
-# Flutter/Dart/Pub related
-**/doc/api/
-**/ios/Flutter/.last_build_id
-.dart_tool/
-.flutter-plugins-dependencies
-.pub-cache/
-.pub/
-/build/
-/coverage/
-
-# Symbolication related
-app.*.symbols
-
-# Obfuscation related
-app.*.map.json
-
-# Android Studio will place build artifacts here
-/android/app/debug
-/android/app/profile
-/android/app/release
-
-# Flutter DevTools generated settings
-/devtools_options.yaml
-.vercel
-
-.env.local
-
-# Node / Convex CLI toolchain (tracked via package.json + package-lock.json)
+# Node / Next.js
 node_modules/
+.next/
+out/
+.vercel/
+next-env.d.ts.bak
 
-# Opencode / Claude agent caches (local, not part of the project)
+# Local env (real values live in Vercel for production)
+.env.local
+.env*.local
+
+# Opencode / Claude agent caches
 .agents/
 .claude/
 skills-lock.json
