@@ -1,0 +1,25 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "if [ ! -d \"$HOME/.flutter-sdk\" ]; then git clone --depth 1 --branch 3.44.9 https://github.com/flutter/flutter.git \"$HOME/.flutter-sdk\"; fi && export PATH=\"$HOME/.flutter-sdk/bin:$PATH\" && flutter config --no-analytics && flutter pub get",
+  "buildCommand": "export PATH=\"$HOME/.flutter-sdk/bin:$PATH\" && flutter build web --release --dart-define=CONVEX_SITE_URL=${CONVEX_SITE_URL:-}",
+  "outputDirectory": "build/web",
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(index\\.html|manifest\\.json|flutter_service_worker\\.js|flutter_bootstrap\\.js|main\\.dart\\.js|version\\.json)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+      ]
+    }
+  ]
+}

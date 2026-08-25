@@ -19,9 +19,17 @@
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="Eight handy Thailand-travel tools — cost converter, location, bathrooms, attractions, day counter, Bolt, banking and weather — in one installable app.">
+  <meta name="color-scheme" content="dark light">
+
+  <!-- Pre-paint background matching AppTheme surfaces: kills the white
+       flash between HTML parse and the first Flutter frame. -->
+  <style>
+    html { background: #14111F; }
+    @media (prefers-color-scheme: light) { html { background: #F7F5FF; } }
+  </style>
 
   <!-- PWA / brand -->
-  <meta name="theme-color" content="#5B3DF5">
+  <meta name="theme-color" content="#14111F">
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
@@ -42,6 +50,15 @@
       event.preventDefault();
       window.__quickyInstallPrompt = event;
     });
+  </script>
+  <script>
+    // Offline shell: Flutter 3.44's loader no longer registers its generated
+    // service worker on first visit, so Quicky ships and registers its own.
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js');
+      });
+    }
   </script>
 </head>
 <body>

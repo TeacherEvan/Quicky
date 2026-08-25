@@ -99,10 +99,3 @@ class SectionHeader extends StatelessWidget {
     );
   }
 }
-
-/// Install-row strings. Keys live in app_en.arb / app_th.arb; resolved via
-/// `translate()` because lib/core/l10n is owned elsewhere.
-extension _InstallL10n on AppLocalizations {
-  String get installQuickyTitle => translate('installQuickyTitle');
-  String get installQuickySubtitle => translate('installQuickySubtitle');
-}

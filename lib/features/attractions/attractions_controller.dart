@@ -13,21 +13,31 @@ class AttractionsState {
     this.radiusKm = 10,
     this.places = const [],
     this.loading = false,
+    this.error = false,
   });
 
   final double radiusKm;
   final List<Attraction> places;
   final bool loading;
 
+  /// True when the last fetch failed outright (no fallback data at all).
+  final bool error;
+
+  /// True when any row in [places] came from the mock fallback; the UI must
+  /// disclose sample data so it is never mistaken for live results.
+  bool get showingMock => !loading && places.any((p) => p.isMock);
+
   AttractionsState copyWith({
     double? radiusKm,
     List<Attraction>? places,
     bool? loading,
+    bool? error,
   }) {
     return AttractionsState(
       radiusKm: radiusKm ?? this.radiusKm,
       places: places ?? this.places,
       loading: loading ?? this.loading,
+      error: error ?? this.error,
     );
   }
 }
@@ -37,14 +47,25 @@ class AttractionsController extends StateNotifier<AttractionsState> {
 
   static const radii = [0.0, 10.0, 40.0, 100.0];
 
+  /// Monotonic token so a slow stale response can never overwrite a newer
+  /// selection's results.
+  int _requestId = 0;
+
   void setRadius(double km) {
     state = state.copyWith(radiusKm: km);
     load();
   }
 
   Future<void> load() async {
-    state = state.copyWith(loading: true);
-    final places = await PlacesService().fetchNearby(state.radiusKm);
-    state = state.copyWith(places: places, loading: false);
+    final request = ++_requestId;
+    state = state.copyWith(loading: true, error: false);
+    try {
+      final places = await PlacesService().fetchNearby(state.radiusKm);
+      if (request != _requestId) return; // a newer request superseded this one
+      state = state.copyWith(places: places, loading: false);
+    } on Exception {
+      if (request != _requestId) return;
+      state = state.copyWith(loading: false, error: true);
+    }
   }
 }

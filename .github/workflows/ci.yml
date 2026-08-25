@@ -32,3 +32,5 @@ jobs:
       - name: Build release web (PWA)
         # Vercel deploys this exact target; a broken web build fails CI.
         run: flutter build web --release
+      - name: Smoke gate (JSON configs + served build entrypoints)
+        run: chmod +x tool/smoke.sh && ./tool/smoke.sh

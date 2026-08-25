@@ -26,9 +26,23 @@ class BoltService {
   }
 
   /// Launches BOLT if installed. Returns false if not installed.
+  ///
+  /// Web: `canLaunchUrl` rejects custom schemes there, so we launch directly
+  /// inside the user gesture and let the browser attempt the hand-off.
   Future<bool> launch() async {
     if (!await isInstalled()) return false;
-    final uri = Uri.parse(kIsWeb ? scheme : '${scheme}home');
+    if (kIsWeb) {
+      try {
+        await launchUrl(
+          Uri.parse(scheme),
+          mode: LaunchMode.externalApplication,
+        );
+        return true;
+      } on Exception {
+        return false;
+      }
+    }
+    final uri = Uri.parse('${scheme}home');
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
       return true;

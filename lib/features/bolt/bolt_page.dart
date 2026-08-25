@@ -29,8 +29,20 @@ class _BoltPageState extends ConsumerState<BoltPage> {
   }
 
   Future<void> _launch() async {
+    final l10n = AppLocalizations.of(context);
     final ok = await BoltService().launch();
-    if (mounted) setState(() => _launched = ok);
+    if (!mounted) return;
+    setState(() => _launched = ok);
+    // Never fail silently: report the hand-off result either way.
+    ScaffoldMessenger.of(context)
+      ..clearSnackBars()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(
+            ok ? l10n.launchOpening('BOLT') : l10n.launchFailed('BOLT'),
+          ),
+        ),
+      );
   }
 
   @override
@@ -46,7 +58,7 @@ class _BoltPageState extends ConsumerState<BoltPage> {
             : FilledButton.icon(
                 onPressed: _launch,
                 icon: const Icon(Icons.electric_bolt),
-                label: Text(_launched ? 'Launched' : 'Launch BOLT'),
+                label: Text(_launched ? l10n.launched : l10n.launchBolt),
               ),
       ),
     );

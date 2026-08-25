@@ -53,9 +53,8 @@ void main() {
     _,
   ) async {
     final homeRoutes = appRouter.configuration.routes.where(
-      (r) => r is GoRoute && r.path == Routes.home,
-    );
-    expect(
+      (RouteBase r) => r is GoRoute && r.path == Routes.home,
+    );    expect(
       homeRoutes.length,
       1,
       reason: 'A second "/" route would shadow the dashboard.',

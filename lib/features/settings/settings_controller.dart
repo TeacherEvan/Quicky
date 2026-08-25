@@ -1,6 +1,15 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+/// Maps a persisted theme name ('system' | 'light' | 'dark') to [ThemeMode].
+/// Unknown values fall back to [ThemeMode.system].
+ThemeMode themeModeFromName(String name) => switch (name) {
+  'light' => ThemeMode.light,
+  'dark' => ThemeMode.dark,
+  _ => ThemeMode.system,
+};
 
 /// Central settings state, persisted across all feature tiles.
 class SettingsState {

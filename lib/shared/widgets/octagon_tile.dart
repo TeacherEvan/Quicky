@@ -65,9 +65,13 @@ class _OctagonTileState extends State<OctagonTile>
       color: scheme.onSurfaceVariant,
     );
 
+    // ONE semantics node: button flag + label + tap action live here, and the
+    // InkWell opts out so it can't emit a second, unlabeled tappable node.
+    // FocusableActionDetector keeps Enter/Space activation working.
     return Semantics(
       button: true,
       label: widget.semanticsLabel ?? widget.label,
+      onTap: widget.onTap,
       child: FocusableActionDetector(
         mouseCursor: SystemMouseCursors.click,
         actions: <Type, Action<Intent>>{
@@ -79,9 +83,9 @@ class _OctagonTileState extends State<OctagonTile>
           ),
         },
         child: InkWell(
+          excludeFromSemantics: true,
           onTap: widget.onTap,
           customBorder: const _OctagonBorder(),
-          borderRadius: BorderRadius.circular(12),
           focusColor: onColor.withValues(alpha: 0.24),
           hoverColor: onColor.withValues(alpha: 0.12),
           splashFactory: InkRipple.splashFactory,

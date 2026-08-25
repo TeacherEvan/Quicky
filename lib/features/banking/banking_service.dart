@@ -43,16 +43,22 @@ class BankingService {
   }
 
   /// Launches the given bank if installed. Returns false if absent.
+  ///
+  /// Web: `canLaunchUrl` rejects custom schemes there, so we launch directly
+  /// inside the user gesture and let the browser attempt the hand-off.
   Future<bool> launch(String bankName) async {
     if (kIsWeb) {
       final scheme = bankSchemes[bankName];
       if (scheme == null) return false;
-      final uri = Uri.parse(scheme);
-      if (await canLaunchUrl(uri)) {
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      try {
+        await launchUrl(
+          Uri.parse(scheme),
+          mode: LaunchMode.externalApplication,
+        );
         return true;
+      } on Exception {
+        return false;
       }
-      return false;
     }
     final pkg = bankPackages[bankName];
     if (pkg == null) return false;

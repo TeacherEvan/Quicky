@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 /// Manual localization (no code-gen). Translations are embedded as maps so no
 /// asset bundling or async loading is required.
@@ -13,6 +14,9 @@ class AppLocalizations {
 
   static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = [
     delegate,
+    GlobalMaterialLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
   ];
 
   static const List<Locale> supportedLocales = [Locale('en'), Locale('th')];
@@ -59,6 +63,34 @@ class AppLocalizations {
       'privacyComing': 'Analytics opt-out (coming)',
       'sectionAbout': 'About',
       'aboutVersion': 'Quicky · v1.0.0',
+      'installQuickyTitle': 'Install Quicky',
+      'installQuickySubtitle': 'Add to home screen for offline use',
+      'loading': 'Loading…',
+      'skip': 'Skip',
+      'launchBolt': 'Launch BOLT',
+      'launched': 'Launched',
+      'launchOpening': 'Opening {app}…',
+      'launchFailed': 'Could not open {app}.',
+      'captureFailed': 'Capture failed. Please try again.',
+      'offlineEstimate': 'Offline estimate — live data unavailable',
+      'mockData': 'Sample data — live results unavailable',
+      'forecastToday': 'Today',
+      'forecastTomorrow': 'Tomorrow',
+      'forecastDay3': 'In 2 days',
+      'daysUnit': 'days',
+      'invalidDays': 'Enter a whole number of days (at least 1).',
+      'bathroomMale': 'Male',
+      'bathroomFemale': 'Female',
+      'toggleBathroom': 'Switch between male and female',
+      'open': 'Open',
+      'closed': 'Closed',
+      'areaChip': 'Area',
+      'errorTitle': 'Something went wrong',
+      'retry': 'Retry',
+      'noPlaces': 'No places found nearby.',
+      'goHome': 'Back to home',
+      'notFoundTitle': 'Page not found',
+      'notFoundBody': 'The page you are looking for does not exist.',
     },
     'th': {
       'appTitle': 'Quicky',
@@ -97,10 +129,45 @@ class AppLocalizations {
       'privacyComing': 'ปิดการวิเคราะห์ (เร็วๆ นี้)',
       'sectionAbout': 'เกี่ยวกับ',
       'aboutVersion': 'Quicky · v1.0.0',
+      'installQuickyTitle': 'ติดตั้ง Quicky',
+      'installQuickySubtitle': 'เพิ่มลงหน้าจอหลักเพื่อใช้งานออฟไลน์',
+      'loading': 'กำลังโหลด…',
+      'skip': 'ข้าม',
+      'launchBolt': 'เปิด BOLT',
+      'launched': 'เปิดแล้ว',
+      'launchOpening': 'กำลังเปิด {app}…',
+      'launchFailed': 'ไม่สามารถเปิด {app} ได้',
+      'captureFailed': 'ถ่ายภาพไม่สำเร็จ กรุณาลองอีกครั้ง',
+      'offlineEstimate': 'ข้อมูลประมาณการออฟไลน์ — ไม่สามารถดึงข้อมูลสดได้',
+      'mockData': 'ข้อมูลตัวอย่าง — ไม่สามารถดึงข้อมูลสดได้',
+      'forecastToday': 'วันนี้',
+      'forecastTomorrow': 'พรุ่งนี้',
+      'forecastDay3': '2 วันข้างหน้า',
+      'daysUnit': 'วัน',
+      'invalidDays': 'ป้อนจำนวนวันเป็นเลขจำนวนเต็ม (อย่างน้อย 1)',
+      'bathroomMale': 'ชาย',
+      'bathroomFemale': 'หญิง',
+      'toggleBathroom': 'สลับระหว่างห้องน้ำชายและหญิง',
+      'open': 'เปิด',
+      'closed': 'ปิด',
+      'areaChip': 'พื้นที่ใกล้ฉัน',
+      'errorTitle': 'เกิดข้อผิดพลาด',
+      'retry': 'ลองอีกครั้ง',
+      'noPlaces': 'ไม่พบสถานที่ใกล้เคียง',
+      'goHome': 'กลับหน้าหลัก',
+      'notFoundTitle': 'ไม่พบหน้านี้',
+      'notFoundBody': 'หน้าที่คุณค้นหาไม่มีอยู่',
     },
   };
 
   String translate(String key) => _strings[key] ?? key;
+
+  /// Translates [key] and substitutes `{name}` placeholders from [params].
+  String format(String key, Map<String, String> params) {
+    var s = translate(key);
+    params.forEach((k, v) => s = s.replaceAll('{$k}', v));
+    return s;
+  }
 
   String get appTitle => translate('appTitle');
   String get costTile => translate('costTile');
@@ -147,6 +214,52 @@ class AppLocalizations {
   String get privacyComing => translate('privacyComing');
   String get sectionAbout => translate('sectionAbout');
   String get aboutVersion => translate('aboutVersion');
+  String get installQuickyTitle => translate('installQuickyTitle');
+  String get installQuickySubtitle => translate('installQuickySubtitle');
+
+  // Shared states / actions
+  String get loading => translate('loading');
+  String get skip => translate('skip');
+  String get errorTitle => translate('errorTitle');
+  String get retry => translate('retry');
+  String get goHome => translate('goHome');
+
+  // Launchers
+  String get launchBolt => translate('launchBolt');
+  String get launched => translate('launched');
+  String launchOpening(String app) => format('launchOpening', {'app': app});
+  String launchFailed(String app) => format('launchFailed', {'app': app});
+
+  // Camera
+  String get captureFailed => translate('captureFailed');
+
+  // Data provenance
+  String get offlineEstimate => translate('offlineEstimate');
+  String get mockData => translate('mockData');
+
+  // Weather forecast
+  String get forecastToday => translate('forecastToday');
+  String get forecastTomorrow => translate('forecastTomorrow');
+  String get forecastDay3 => translate('forecastDay3');
+
+  // Day counter
+  String get daysUnit => translate('daysUnit');
+  String get invalidDays => translate('invalidDays');
+
+  // Bathroom
+  String get bathroomMale => translate('bathroomMale');
+  String get bathroomFemale => translate('bathroomFemale');
+  String get toggleBathroom => translate('toggleBathroom');
+
+  // Attractions
+  String get open => translate('open');
+  String get closed => translate('closed');
+  String get areaChip => translate('areaChip');
+  String get noPlaces => translate('noPlaces');
+
+  // 404
+  String get notFoundTitle => translate('notFoundTitle');
+  String get notFoundBody => translate('notFoundBody');
 }
 
 class _AppLocalizationsDelegate

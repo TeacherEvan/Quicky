@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:quicky/core/l10n/app_localizations.dart';
 
 import 'routes.dart';
 
@@ -10,4 +12,52 @@ import 'routes.dart';
 final GoRouter appRouter = GoRouter(
   initialLocation: Routes.splash,
   routes: <RouteBase>[...appRoutes],
+  errorBuilder: (context, state) => const RouteErrorPage(),
 );
+
+/// Branded 404 for unknown paths instead of go_router's raw error screen.
+class RouteErrorPage extends StatelessWidget {
+  const RouteErrorPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final scheme = Theme.of(context).colorScheme;
+    return Scaffold(
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.map_outlined,
+                size: 64,
+                color: scheme.onSurfaceVariant,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                l10n.notFoundTitle,
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                l10n.notFoundBody,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: scheme.onSurfaceVariant,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              FilledButton.icon(
+                onPressed: () => context.go(Routes.home),
+                icon: const Icon(Icons.home_outlined),
+                label: Text(l10n.goHome),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

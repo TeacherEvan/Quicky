@@ -20,8 +20,10 @@ class WeatherService {
 
   static const _mockSnapshot = WeatherSnapshot(
     tempC: 31,
+    tempF: 88,
     condition: 'Sunny',
     forecast: ['32°', '30°', '29°'],
+    isMock: true,
   );
 
   /// Fetches the current snapshot for [lat]/[lng].
@@ -57,8 +59,10 @@ class WeatherService {
     if (tempC == null || condition == null || rawForecast == null) return null;
     final forecast = rawForecast.whereType<String>().toList(growable: false);
     if (forecast.isEmpty) return null;
+    final tempF = (data['tempF'] as num?)?.toDouble();
     return WeatherSnapshot(
       tempC: tempC,
+      tempF: tempF ?? tempC * 9 / 5 + 32,
       condition: condition,
       forecast: forecast,
     );
@@ -96,9 +100,11 @@ class WeatherService {
               .take(3)
               .toList(growable: false);
       if (maxes.isEmpty) return null;
-      final tempC = units.toUpperCase() == 'F' ? (value - 32) * 5 / 9 : value;
+      final isF = units.toUpperCase() == 'F';
+      final tempC = isF ? (value - 32) * 5 / 9 : value;
       return WeatherSnapshot(
         tempC: tempC,
+        tempF: isF ? value : value * 9 / 5 + 32,
         condition: conditionForCode(code),
         forecast: maxes.map((m) => '${m.round()}°').toList(growable: false),
       );
@@ -123,11 +129,21 @@ class WeatherService {
 class WeatherSnapshot {
   const WeatherSnapshot({
     required this.tempC,
+    required this.tempF,
     required this.condition,
     required this.forecast,
+    this.isMock = false,
   });
 
+  /// Current temperature, always Celsius.
   final double tempC;
+
+  /// Current temperature, always Fahrenheit (display scale for units=F).
+  final double tempF;
   final String condition;
   final List<String> forecast;
+
+  /// True when this snapshot came from the deterministic mock fallback; the
+  /// UI must disclose it so it is never mistaken for live data.
+  final bool isMock;
 }

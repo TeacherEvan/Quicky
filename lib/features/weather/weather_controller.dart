@@ -10,15 +10,23 @@ final weatherControllerProvider =
     });
 
 class WeatherState {
-  const WeatherState({this.snapshot, this.loading = false});
+  const WeatherState({this.snapshot, this.loading = false, this.units = 'C'});
 
   final WeatherSnapshot? snapshot;
   final bool loading;
 
-  WeatherState copyWith({WeatherSnapshot? snapshot, bool? loading}) {
+  /// Unit scale of the current snapshot's display strings ('C' or 'F').
+  final String units;
+
+  WeatherState copyWith({
+    WeatherSnapshot? snapshot,
+    bool? loading,
+    String? units,
+  }) {
     return WeatherState(
       snapshot: snapshot ?? this.snapshot,
       loading: loading ?? this.loading,
+      units: units ?? this.units,
     );
   }
 }
@@ -32,6 +40,10 @@ class WeatherController extends StateNotifier<WeatherState> {
     state = state.copyWith(loading: true);
     final units = _ref.read(settingsControllerProvider).weatherUnits;
     final snap = await WeatherService().fetch(13.7563, 100.5018, units: units);
-    state = state.copyWith(snapshot: snap, loading: false);
+    state = state.copyWith(
+      snapshot: snap,
+      loading: false,
+      units: units.toUpperCase(),
+    );
   }
 }

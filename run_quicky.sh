@@ -12,10 +12,20 @@ PORT=8090
 FLUTTER_BIN="$HOME/snap/flutter/common/flutter/bin/flutter"
 CHROME_BIN="/usr/bin/google-chrome-stable"
 
+# Wire the local Convex deployment in when .env.local exists (npm run convex:dev).
+CONVEX_DEFINE=()
+if [ -f .env.local ]; then
+  SITE_URL="$(grep '^CONVEX_SITE_URL=' .env.local | cut -d= -f2 || true)"
+  if [ -n "$SITE_URL" ]; then
+    CONVEX_DEFINE=(--dart-define=CONVEX_SITE_URL="$SITE_URL")
+    echo "  Convex: $SITE_URL"
+  fi
+fi
+
 echo "▶ Quicky launcher: building/serving web build on port $PORT ..."
 
 # Launch Flutter web dev server in the background, detached so it survives.
-nohup "$FLUTTER_BIN" run -d chrome --web-port "$PORT" > /tmp/quicky_launcher.log 2>&1 &
+nohup "$FLUTTER_BIN" run -d chrome --web-port "$PORT" "${CONVEX_DEFINE[@]}" > /tmp/quicky_launcher.log 2>&1 &
 FLUTTER_PID=$!
 echo "  flutter pid=$FLUTTER_PID (log: /tmp/quicky_launcher.log)"
 

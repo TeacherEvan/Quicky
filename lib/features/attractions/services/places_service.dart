@@ -29,27 +29,32 @@ class PlacesService {
     if (fromConvex != null) return fromConvex;
     final direct = await _fromOverpass(radiusKm);
     if (direct != null) return direct;
-    return [
-      Attraction(
-        name: 'Mock Cafe',
-        distanceKm: radiusKm * 0.2,
-        type: 'cafe',
-        openNow: true,
-      ),
-      Attraction(
-        name: 'Mock Temple',
-        distanceKm: radiusKm * 0.5,
-        type: 'temple',
-        openNow: true,
-      ),
-      Attraction(
-        name: 'Mock Market',
-        distanceKm: radiusKm * 0.8,
-        type: 'market',
-        openNow: false,
-      ),
-    ];
+    return _mockList(radiusKm);
   }
+
+  List<Attraction> _mockList(double radiusKm) => [
+    Attraction(
+      name: 'Mock Cafe',
+      distanceKm: radiusKm * 0.2,
+      type: 'cafe',
+      openNow: true,
+      isMock: true,
+    ),
+    Attraction(
+      name: 'Mock Temple',
+      distanceKm: radiusKm * 0.5,
+      type: 'temple',
+      openNow: true,
+      isMock: true,
+    ),
+    Attraction(
+      name: 'Mock Market',
+      distanceKm: radiusKm * 0.8,
+      type: 'market',
+      openNow: false,
+      isMock: true,
+    ),
+  ];
 
   Future<List<Attraction>?> _fromConvex(double radiusKm) async {
     final data = await _convex.getJson('/api/places', {
@@ -76,6 +81,9 @@ class PlacesService {
         ),
       );
     }
+    // Empty result: fall through to the next chain step, matching
+    // _fromOverpass behaviour.
+    if (places.isEmpty) return null;
     return places;
   }
 
@@ -160,10 +168,15 @@ class Attraction {
     required this.distanceKm,
     required this.type,
     required this.openNow,
+    this.isMock = false,
   });
 
   final String name;
   final double distanceKm;
   final String type;
   final bool openNow;
+
+  /// True when this row comes from the deterministic mock fallback rather
+  /// than live Convex/Overpass data; the UI must disclose it.
+  final bool isMock;
 }

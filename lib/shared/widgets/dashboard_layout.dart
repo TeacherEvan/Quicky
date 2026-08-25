@@ -49,12 +49,15 @@ class _DashboardLayoutState extends State<DashboardLayout>
     final viewport = min(mq.size.width, mq.size.height);
 
     // Scale the ring so the outermost octagon (plus its label) stays on-screen.
+    // The floor yields to [safeMax] on short viewports instead of forcing
+    // tiles past the screen edge.
     final octSize = widget.tiles.first.octagonSize;
     final maxRadius = viewport / 2 - octSize - 20.0; // 20 = label + margin
     final insets = mq.viewPadding;
     final padV = (insets.top + insets.bottom) / 2;
     final safeMax = maxRadius - padV;
-    final r = max(64, min(widget.radius, safeMax));
+    const floorRadius = 40.0;
+    final r = min(widget.radius, max(safeMax, floorRadius));
 
     // Brighter ring in dark mode so it stays visible on _darkSurface; faint in
     // light mode so it doesn't compete with the octagons.
@@ -72,40 +75,53 @@ class _DashboardLayoutState extends State<DashboardLayout>
     );
 
     final placed = <Widget>[
+      // Ring first (bottom of stack) and pointer-transparent: it is pure
+      // decoration and must never block taps on the hub or tiles.
+      Positioned.fill(
+        child: IgnorePointer(
+          child: Center(child: ring),
+        ),
+      ),
       _fade(child: Center(child: widget.center)),
-      Center(child: ring),
     ];
 
-    for (var i = 0; i < widget.tiles.length; i++) {
-      // Start at -90° (top) and step 45° clockwise.
-      final angle = (-90 + i * 45) * pi / 180;
-      final dx = cos(angle) * r;
-      final dy = sin(angle) * r;
-      final delay = (i / widget.tiles.length) * 0.5;
-      final anim = CurvedAnimation(
-        parent: _enter,
-        curve: Interval(delay, 1, curve: Curves.easeOutBack),
-      );
-      placed.add(
-        Positioned(
-          // Offset by half the octagon so its CENTER sits on the ring point;
-          // the label hangs below naturally.
-          left: dx - octSize / 2,
-          top: dy - octSize / 2,
-          child: FadeTransition(
-            opacity: anim,
-            child: ScaleTransition(
-              scale: Tween<double>(begin: 0.6, end: 1).animate(anim),
-              child: widget.tiles[i],
-            ),
-          ),
-        ),
-      );
-    }
-
     return SafeArea(
-      child: SizedBox.expand(
-        child: Stack(alignment: Alignment.center, children: placed),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final cx = constraints.maxWidth / 2;
+          final cy = constraints.maxHeight / 2;
+          final ringChildren = <Widget>[];
+          for (var i = 0; i < widget.tiles.length; i++) {
+            // Start at -90° (top) and step 45° clockwise.
+            final angle = (-90 + i * 45) * pi / 180;
+            final dx = cos(angle) * r;
+            final dy = sin(angle) * r;
+            final delay = (i / widget.tiles.length) * 0.5;
+            final anim = CurvedAnimation(
+              parent: _enter,
+              curve: Interval(delay, 1, curve: Curves.easeOutBack),
+            );
+            ringChildren.add(
+              Positioned(
+                // Offset by half the octagon so its CENTER sits on the ring
+                // point around the STACK CENTER; the label hangs below.
+                left: cx + dx - octSize / 2,
+                top: cy + dy - octSize / 2,
+                child: FadeTransition(
+                  opacity: anim,
+                  child: ScaleTransition(
+                    scale: Tween<double>(begin: 0.6, end: 1).animate(anim),
+                    child: widget.tiles[i],
+                  ),
+                ),
+              ),
+            );
+          }
+          return Stack(
+            alignment: Alignment.center,
+            children: [...placed, ...ringChildren],
+          );
+        },
       ),
     );
   }

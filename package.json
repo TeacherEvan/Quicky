@@ -1,0 +1,13 @@
+{
+  "name": "quicky",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Quicky — Thailand travel hub. npm root for the Convex backend (convex/).",
+  "scripts": {
+    "convex:dev": "convex dev",
+    "convex:deploy": "convex deploy"
+  },
+  "devDependencies": {
+    "convex": "^1.25.0"
+  }
+}
