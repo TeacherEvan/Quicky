@@ -9,7 +9,7 @@
  * network-bound machine translation for the Cost tile.
  */
 
-import { useMemo, type ReactNode } from "react";
+import { useMemo } from "react";
 import { useSettings, type Language } from "./settings";
 
 const STRINGS = {
@@ -372,15 +372,4 @@ export function useT(): TFunction {
     return (key: StringKey, vars?: Record<string, string | number>) =>
       translate(language, key, vars);
   }, [language]);
-}
-
-/**
- * I18nProvider is a no-op pass-through kept for layout compatibility.
- * The translation dictionary lives in module-scope STRINGS; useT()
- * reads the language directly from SettingsContext, so no provider
- * is actually needed. The wrapper stays in place so the existing
- * <I18nProvider> in app/layout.tsx keeps type-checking.
- */
-export function I18nProvider({ children }: { children: ReactNode }) {
-  return <>{children}</>;
 }
