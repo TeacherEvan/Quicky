@@ -8,6 +8,7 @@ import { Loading } from "@/components/Loading";
 import { ErrorState } from "@/components/ErrorState";
 import { EmptyState } from "@/components/EmptyState";
 import { Icon } from "@/components/Icon";
+import { Button } from "@/components/Button";
 
 interface RecognizedText {
   raw: string;
@@ -63,6 +64,7 @@ export default function CostPage() {
   const [text, setText] = useState<string>("");
   const [running, setRunning] = useState(false);
   const [progress, setProgress] = useState<string>("");
+  const [progressPct, setProgressPct] = useState<number>(0);
   const [result, setResult] = useState<RecognizedText | null>(null);
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -81,12 +83,14 @@ export default function CostPage() {
     setText("");
     setRunning(true);
     setProgress(t("tile.cost.progress.loadOcr"));
+    setProgressPct(0);
     try {
       const Tesseract = (await import("tesseract.js")).default;
       setProgress(t("tile.cost.progress.ocr"));
       const { data } = await Tesseract.recognize(f, "eng", {
         logger: (m: { status: string; progress: number }) => {
           if (m.status === "recognizing text") {
+            setProgressPct(Math.round(m.progress * 100));
             setProgress(`${t("tile.cost.progress.ocr")} ${Math.round(m.progress * 100)}%`);
           }
         },
@@ -98,13 +102,16 @@ export default function CostPage() {
       }
       setText(raw);
       setProgress(t("tile.cost.progress.translate"));
+      setProgressPct(50);
       const match = lookupPhrasebook(raw);
       if (match) {
         setResult({ raw, thai: match.thai, match: 1 });
+        setProgressPct(100);
       } else {
         try {
           const tr = await translateToThai(raw);
           setResult({ raw, thai: tr.translatedText, match: tr.match / 100 });
+          setProgressPct(100);
         } catch (e: unknown) {
           setError(
             e instanceof Error
@@ -125,40 +132,76 @@ export default function CostPage() {
     setError(null);
     setResult(null);
     setText("");
+    setProgressPct(0);
     if (inputRef.current) inputRef.current.value = "";
     inputRef.current?.click();
   }
 
+  function copyToClipboard(str: string) {
+    if (navigator.clipboard && window.isSecureContext) {
+      (navigator.clipboard as unknown as { writeString: (s: string) => Promise<void> }).writeString(str);
+    } else {
+      const ta = document.createElement("textarea");
+      ta.value = str;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+    }
+  }
+
   return (
-    <article>
+    <article className="page">
       <Breadcrumb
         items={[
           { label: t("app.nav.dashboard"), href: "/" },
           { label: t("tile.cost.title") },
         ]}
       />
-      <header className="row" style={{ marginBottom: "var(--space-2)" }}>
-        <Icon name="counter" size={28} aria-hidden />
-        <h1 style={{ margin: 0 }}>{t("tile.cost.title")}</h1>
+
+      <header className="page-header">
+        <div className="page-header__top">
+          <span
+            className="page-header__icon"
+            style={{
+              background: "var(--cat-photo-bg)",
+              border: "1px solid var(--cat-photo-border)",
+              color: "var(--cat-photo-ink)",
+            }}
+            aria-hidden="true"
+          >
+            <Icon name="camera" size={24} />
+          </span>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <h1 className="page-header__title">{t("tile.cost.title")}</h1>
+            <p className="page-header__lede">{t("tile.cost.intro")}</p>
+          </div>
+        </div>
       </header>
-      <p className="muted">{t("tile.cost.intro")}</p>
 
-      <div className="field mt-3">
-        <label className="field-label" htmlFor="cost-photo">
-          {t("tile.cost.pickPhoto")}
-        </label>
-        <input
-          ref={inputRef}
-          id="cost-photo"
-          type="file"
-          accept="image/*"
-          capture="environment"
-          onChange={onPick}
-          disabled={running}
-        />
-      </div>
+      <section className="section" aria-labelledby="cost-input">
+        <div className="section-heading">
+          <h2 id="cost-input">{t("tile.cost.pickPhoto")}</h2>
+        </div>
+        <div className="field">
+          <label className="field-label" htmlFor="cost-photo">
+            {t("tile.cost.pickPhoto")}
+          </label>
+          <input
+            ref={inputRef}
+            id="cost-photo"
+            type="file"
+            accept="image/*"
+            capture="environment"
+            onChange={onPick}
+            disabled={running}
+          />
+        </div>
+      </section>
 
-      <div className="mt-4" role="status" aria-live="polite">
+      <div className="mt-3" role="status" aria-live="polite">
         {error ? (
           <ErrorState
             title={t("common.errorTitle")}
@@ -166,32 +209,48 @@ export default function CostPage() {
             onRetry={pickAgain}
           />
         ) : running ? (
-          <Loading size="lg" label={progress || t("tile.cost.running")} />
+          <div className="cost-progress">
+            <div className="cost-progress__head">
+              <span className="cost-progress__label">{progress}</span>
+              <span className="cost-progress__pct">{progressPct}%</span>
+            </div>
+            <div className="cost-progress__bar">
+              <span style={{ width: `${progressPct}%` }} />
+            </div>
+            <Loading size="md" label={progress} />
+          </div>
         ) : null}
       </div>
 
       {text && !error ? (
-        <section className="mt-3" aria-labelledby="cost-raw">
-          <h2 id="cost-raw">{t("tile.cost.recognisedHeading")}</h2>
-          <p className="card" style={{ whiteSpace: "pre-wrap" }}>
-            {text}
-          </p>
-        </section>
-      ) : null}
-
-      {result ? (
-        <section className="mt-3" aria-labelledby="cost-thai">
-          <h2 id="cost-thai">{t("tile.cost.thaiHeading")}</h2>
-          <p
-            className="thai-phrase"
-            lang="th"
-            aria-label={t("tile.cost.thaiLabel")}
-          >
-            {result.thai}
-          </p>
-          <p className="muted" aria-live="polite">
-            {t("tile.cost.confidence")}: {Math.round(result.match * 100)}%
-          </p>
+        <section className="cost-compare" aria-labelledby="cost-raw">
+          <div className="cost-compare__col">
+            <div className="cost-compare__label">{t("tile.cost.recognisedHeading")}</div>
+            <pre className="cost-compare__text">{text}</pre>
+          </div>
+          {result ? (
+            <div className="cost-compare__col">
+              <div className="cost-compare__label">{t("tile.cost.thaiHeading")}</div>
+              <p className="cost-compare__text cost-compare__text--thai" lang="th">
+                {result.thai}
+              </p>
+              <div className="row-tight" style={{ marginTop: "var(--s-2)" }}>
+                <span className="muted">
+                  {t("tile.cost.confidence")}: {Math.round(result.match * 100)}%
+                </span>
+                <span className="spacer" />
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => copyToClipboard(result.thai)}
+                  iconName="copy"
+                  aria-label={t("tile.cost.copyThai")}
+                >
+                  {t("tile.cost.copy")}
+                </Button>
+              </div>
+            </div>
+          ) : null}
         </section>
       ) : null}
 

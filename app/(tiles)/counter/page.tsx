@@ -30,6 +30,13 @@ function diffDays(iso: string): number | null {
   return Math.ceil((t - now) / (1000 * 60 * 60 * 24));
 }
 
+function formatDateForInput(date: Date): string {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
 export default function CounterPage() {
   const t = useT();
   const [target, setTarget] = useState<string>("");
@@ -52,59 +59,96 @@ export default function CounterPage() {
   const days = hydrated ? diffDays(target) : null;
 
   return (
-    <article>
+    <article className="page">
       <Breadcrumb
         items={[
           { label: t("app.nav.dashboard"), href: "/" },
           { label: t("tile.counter.title") },
         ]}
       />
-      <header className="row" style={{ marginBottom: "var(--space-2)" }}>
-        <Icon name="counter" size={28} aria-hidden />
-        <h1 style={{ margin: 0 }}>{t("tile.counter.title")}</h1>
-      </header>
-      <p className="muted">{t("tile.counter.intro")}</p>
 
-      <div className="field mt-3" style={{ maxWidth: 280 }}>
-        <label className="field-label" htmlFor="counter-target">
-          {t("tile.counter.targetLabel")}
-        </label>
-        <input
-          id="counter-target"
-          type="date"
-          value={target}
-          onChange={(e) => setTarget(e.target.value)}
-        />
-      </div>
+      <header className="page-header">
+        <div className="page-header__top">
+          <span
+            className="page-header__icon"
+            style={{
+              background: "var(--cat-time-bg)",
+              border: "1px solid var(--cat-time-border)",
+              color: "var(--cat-time-ink)",
+            }}
+            aria-hidden="true"
+          >
+            <Icon name="calendar" size={24} />
+          </span>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <h1 className="page-header__title">{t("tile.counter.title")}</h1>
+            <p className="page-header__lede">{t("tile.counter.intro")}</p>
+          </div>
+        </div>
+      </header>
+
+      <section className="section" aria-labelledby="counter-input">
+        <div className="section-heading">
+          <h2 id="counter-input">{t("tile.counter.targetLabel")}</h2>
+        </div>
+        <div className="field" style={{ maxWidth: 280 }}>
+          <label className="field-label" htmlFor="counter-target">
+            {t("tile.counter.targetLabel")}
+          </label>
+          <input
+            id="counter-target"
+            type="date"
+            value={target}
+            onChange={(e) => setTarget(e.target.value)}
+            min={formatDateForInput(new Date())}
+          />
+        </div>
+      </section>
 
       {days === null ? (
         <p className="muted mt-3">{t("tile.counter.noTarget")}</p>
       ) : days > 0 ? (
         <section
-          className="card mt-3"
+          className="hero mt-3"
           aria-live="polite"
           aria-atomic="true"
           aria-label={t("tile.counter.daysRemaining")}
         >
-          <p className="hero-number">{days}</p>
-          <p className="muted">{t("tile.counter.daysRemaining")}</p>
+          <div className="hero__row">
+            <p className="hero__num tabular">{days}</p>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p className="hero__label">{t("tile.counter.daysRemaining")}</p>
+              <p className="muted" style={{ marginTop: "var(--s-2)" }}>
+                {target && new Date(target).toLocaleDateString(undefined, {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </p>
+            </div>
+          </div>
         </section>
       ) : days === 0 ? (
-        <section className="card mt-3" aria-live="polite" aria-atomic="true">
-          <p className="hero-number" style={{ fontSize: "var(--fs-6)" }}>
-            {t("tile.counter.today")}
-          </p>
+        <section className="hero mt-3" aria-live="polite" aria-atomic="true">
+          <div className="hero__row">
+            <p className="hero__num" style={{ fontSize: "var(--fs-3xl)" }}>
+              {t("tile.counter.today")}
+            </p>
+          </div>
         </section>
       ) : (
-        <section className="card mt-3" aria-live="polite" aria-atomic="true">
-          <p className="muted">
-            {t(
-              Math.abs(days) === 1
-                ? "tile.counter.pastOne"
-                : "tile.counter.pastMany",
-              { n: Math.abs(days) },
-            )}
-          </p>
+        <section className="hero mt-3" aria-live="polite" aria-atomic="true">
+          <div className="hero__row">
+            <p className="muted tabular" style={{ fontSize: "var(--fs-xl)" }}>
+              {t(
+                Math.abs(days) === 1
+                  ? "tile.counter.pastOne"
+                  : "tile.counter.pastMany",
+                { n: Math.abs(days) },
+              )}
+            </p>
+          </div>
         </section>
       )}
     </article>

@@ -9,8 +9,6 @@ export default function TileLayout({ children }: { children: ReactNode }) {
   const mainRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    // Move focus to <main> after a route change so screen-reader users hear
-    // the new page's H1 first, not the previous page's topbar link.
     if (typeof window === "undefined") return;
     const hash = window.location.hash;
     if (hash && document.getElementById(hash.slice(1))) return;

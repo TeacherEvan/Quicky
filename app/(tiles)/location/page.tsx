@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { getReverse } from "@/lib/convex";
 import { useT } from "@/lib/i18n";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { Button } from "@/components/Button";
 import { Loading } from "@/components/Loading";
 import { ErrorState } from "@/components/ErrorState";
 import { EmptyState } from "@/components/EmptyState";
@@ -74,37 +75,58 @@ export default function LocationPage() {
   }
 
   return (
-    <article>
+    <article className="page">
       <Breadcrumb
         items={[
           { label: t("app.nav.dashboard"), href: "/" },
           { label: t("tile.location.title") },
         ]}
       />
-      <header className="row" style={{ marginBottom: "var(--space-2)" }}>
-        <Icon name="pin" size={28} aria-hidden />
-        <h1 style={{ margin: 0 }}>{t("tile.location.title")}</h1>
+
+      <header className="page-header">
+        <div className="page-header__top">
+          <span
+            className="page-header__icon"
+            style={{
+              background: "var(--cat-photo-bg)",
+              border: "1px solid var(--cat-photo-border)",
+              color: "var(--cat-photo-ink)",
+            }}
+            aria-hidden="true"
+          >
+            <Icon name="pin" size={24} />
+          </span>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <h1 className="page-header__title">{t("tile.location.title")}</h1>
+            <p className="page-header__lede">{t("tile.location.intro")}</p>
+          </div>
+        </div>
       </header>
-      <p className="muted">{t("tile.location.intro")}</p>
 
-      <div className="field mt-3">
-        <label className="field-label" htmlFor="location-photo">
-          {t("tile.location.pickPhoto")}
-        </label>
-        <input
-          ref={inputRef}
-          id="location-photo"
-          type="file"
-          accept="image/*"
-          onChange={onPick}
-          aria-describedby="location-help"
-        />
-        <span id="location-help" className="field-hint sr-only">
-          {t("tile.location.intro")}
-        </span>
-      </div>
+      <section className="section" aria-labelledby="location-input">
+        <div className="section-heading">
+          <h2 id="location-input">{t("tile.location.pickPhoto")}</h2>
+        </div>
+        <div className="field">
+          <label className="field-label" htmlFor="location-photo">
+            {t("tile.location.pickPhoto")}
+          </label>
+          <input
+            ref={inputRef}
+            id="location-photo"
+            type="file"
+            accept="image/*"
+            onChange={onPick}
+            aria-describedby="location-help"
+            disabled={loading}
+          />
+          <span id="location-help" className="field-hint">
+            {t("tile.location.intro")}
+          </span>
+        </div>
+      </section>
 
-      <div className="mt-4" role="status" aria-live="polite">
+      <div className="mt-3" role="status" aria-live="polite">
         {error ? (
           <ErrorState
             title={t("common.errorTitle")}
@@ -117,21 +139,50 @@ export default function LocationPage() {
       </div>
 
       {preview ? (
-        <p>
+        <figure style={{ margin: "var(--s-4) 0 0" }}>
           <img
             src={preview}
-            alt={file ? t("tile.location.previewAlt") : t("tile.location.previewAlt")}
+            alt={t("tile.location.previewAlt")}
             className="preview-img"
           />
-        </p>
+          <figcaption className="muted" style={{ marginTop: "var(--s-2)", fontSize: "var(--fs-xs)" }}>
+            {file?.name} · {Math.round((file?.size ?? 0) / 1024)} KB
+          </figcaption>
+        </figure>
       ) : null}
 
       {coords && label ? (
-        <section className="card mt-3" aria-labelledby="location-result">
-          <h2 id="location-result" style={{ margin: 0 }}>{label}</h2>
-          <p className="muted" style={{ margin: "var(--space-2) 0 0" }}>
-            {t("tile.location.coords")}: {coords.lat.toFixed(4)}, {coords.lng.toFixed(4)}
-          </p>
+        <section className="card-elevated mt-4" aria-labelledby="location-result">
+          <div className="row" style={{ gap: "var(--s-4)", alignItems: "flex-start" }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <h2 id="location-result" style={{ margin: 0, fontSize: "var(--fs-xl)" }}>
+                {label}
+              </h2>
+              <p className="muted tabular" style={{ marginTop: "var(--s-2)" }}>
+                {t("tile.location.coords")}: {coords.lat.toFixed(6)}, {coords.lng.toFixed(6)}
+              </p>
+              <p className="muted" style={{ marginTop: "var(--s-2)" }}>
+                <a
+                  href={`https://www.openstreetmap.org/?mlat=${coords.lat}&mlon=${coords.lng}#map=16/${coords.lat}/${coords.lng}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={t("tile.location.openInOsm")}
+                >
+                  <Icon name="globe" size={14} aria-hidden />
+                  {t("tile.location.openInOsm")}
+                </a>
+              </p>
+            </div>
+            <Button
+              variant="secondary"
+              onClick={pickAgain}
+              iconName="refresh"
+              className="btn-sm"
+              style={{ flex: "none" }}
+            >
+              {t("common.retry")}
+            </Button>
+          </div>
         </section>
       ) : null}
 

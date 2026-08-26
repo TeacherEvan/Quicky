@@ -118,11 +118,21 @@ function dedupedFetch<T>(
   return promise;
 }
 
+export interface DayForecast {
+  code: number;
+  condition: string;
+  maxC: number;
+  maxF: number;
+  minC: number;
+  minF: number;
+}
+
 export interface WeatherSnapshot {
   tempC: number;
   tempF: number;
+  weatherCode: number;
   condition: string;
-  forecast: string[];
+  forecast: DayForecast[];
 }
 
 export function getWeather(
@@ -144,7 +154,7 @@ export interface Attraction {
   name: string;
   type: string;
   distanceKm: number;
-  openNow: boolean;
+  openingHours: string | null;
 }
 
 export function getPlaces(

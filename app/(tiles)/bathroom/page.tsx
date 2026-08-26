@@ -36,65 +36,87 @@ export default function BathroomPage() {
     setIsMale((m) => !m);
   }
 
-  const labelKey = isMale ? "tile.bathroom.male" : "tile.bathroom.female";
-  const introKey = isMale ? "tile.bathroom.currentlyMale" : "tile.bathroom.currentlyFemale";
-
   return (
-    <article>
+    <article className="page">
       <Breadcrumb
         items={[
           { label: t("app.nav.dashboard"), href: "/" },
           { label: t("tile.bathroom.title") },
         ]}
       />
-      <header className="row" style={{ marginBottom: "var(--space-2)" }}>
-        <Icon name="wc" size={28} aria-hidden />
-        <h1 style={{ margin: 0 }}>{t("tile.bathroom.title")}</h1>
-      </header>
-      <p className="muted">{t("tile.bathroom.intro")}</p>
 
-      <button
-        type="button"
-        className="card mt-3 full-width"
-        onClick={toggle}
-        aria-label={isMale ? t("tile.bathroom.toggleToFemale") : t("tile.bathroom.toggleToMale")}
-        aria-live="polite"
-        style={{
-          cursor: "pointer",
-          textAlign: "left",
-          minHeight: 180,
-          display: "flex",
-          alignItems: "center",
-          gap: "var(--space-4)",
-        }}
-      >
-        <span
-          aria-hidden="true"
-          style={{
-            width: 72,
-            height: 72,
-            borderRadius: "50%",
-            background: isMale ? "var(--tile-bathroom-bg)" : "var(--tile-bathroom-bg)",
-            color: "var(--tile-bathroom)",
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            border: "1px solid var(--tile-bathroom-border)",
-            flex: "none",
-          }}
-        >
-          <Icon name="wc" size={40} />
-        </span>
-        <span>
-          <span style={{ display: "block", fontSize: "var(--fs-4)", fontWeight: 600 }}>
-            {t(introKey)} <strong>{t(labelKey)}</strong>
+      <header className="page-header">
+        <div className="page-header__top">
+          <span
+            className="page-header__icon"
+            style={{
+              background: "var(--cat-utility-bg)",
+              border: "1px solid var(--cat-utility-border)",
+              color: "var(--cat-utility-ink)",
+            }}
+            aria-hidden="true"
+          >
+            <Icon name="wc" size={24} />
           </span>
-          <span className="muted">{t("tile.bathroom.swap")}</span>
-        </span>
-      </button>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <h1 className="page-header__title">{t("tile.bathroom.title")}</h1>
+            <p className="page-header__lede">{t("tile.bathroom.intro")}</p>
+          </div>
+        </div>
+      </header>
+
+      <section className="section" aria-labelledby="bathroom-current">
+        <div className="section-heading">
+          <h2 id="bathroom-current">{t("tile.bathroom.current")}</h2>
+        </div>
+        <div className="bath-grid" role="group" aria-label={t("tile.bathroom.title")}>
+          <button
+            type="button"
+            className="bath-card"
+            onClick={toggle}
+            aria-pressed={isMale}
+            aria-label={isMale
+              ? t("tile.bathroom.toggleToFemale")
+              : t("tile.bathroom.toggleToMale")}
+          >
+            <span className="bath-card__icon" aria-hidden="true">
+              <Icon name={isMale ? "wc" : "wc"} size={28} />
+            </span>
+            <span className="bath-card__title">
+              {isMale ? t("tile.bathroom.male") : t("tile.bathroom.female")}
+            </span>
+            <span className="bath-card__sub">
+              {isMale
+                ? t("tile.bathroom.currentlyMale")
+                : t("tile.bathroom.currentlyFemale")}
+            </span>
+          </button>
+          <button
+            type="button"
+            className="bath-card"
+            onClick={toggle}
+            aria-pressed={!isMale}
+            aria-label={!isMale
+              ? t("tile.bathroom.toggleToMale")
+              : t("tile.bathroom.toggleToFemale")}
+          >
+            <span className="bath-card__icon" aria-hidden="true">
+              <Icon name={isMale ? "wc" : "wc"} size={28} />
+            </span>
+            <span className="bath-card__title">
+              {!isMale ? t("tile.bathroom.male") : t("tile.bathroom.female")}
+            </span>
+            <span className="bath-card__sub">
+              {!isMale
+                ? t("tile.bathroom.currentlyMale")
+                : t("tile.bathroom.currentlyFemale")}
+            </span>
+          </button>
+        </div>
+      </section>
 
       <div className="row mt-3">
-        <Button variant="secondary" onClick={toggle}>
+        <Button variant="secondary" onClick={toggle} className="btn-block">
           {t("tile.bathroom.swap")}
         </Button>
       </div>

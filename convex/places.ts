@@ -38,7 +38,7 @@ interface Place {
   name: string;
   type: string;
   distanceKm: number;
-  openNow: boolean;
+  openingHours: string | null;
 }
 
 function buildQuery(lat: number, lng: number, radiusKm: number): string {
@@ -65,7 +65,7 @@ function parseElements(data: unknown, lat: number, lng: number): Place[] {
           elLat !== undefined && elLon !== undefined
             ? Math.round(haversineKm(lat, lng, elLat, elLon) * 10) / 10
             : -1,
-        openNow: tags.opening_hours === "24/7",
+        openingHours: tags.opening_hours ?? null,
       };
     })
     .filter((p) => p.name !== "" && p.type !== "" && p.distanceKm >= 0);

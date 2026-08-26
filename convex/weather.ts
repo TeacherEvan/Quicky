@@ -434,6 +434,8 @@ interface OpenMeteoCurrent {
 }
 interface OpenMeteoDaily {
   temperature_2m_max?: number[];
+  temperature_2m_min?: number[];
+  weather_code?: number[];
 }
 interface OpenMeteoPayload {
   current?: OpenMeteoCurrent;
@@ -530,13 +532,27 @@ export const weatherHandler = httpAction(async (_ctx, request) => {
     const maxes: number[] = (daily.temperature_2m_max ?? [])
       .slice(0, 3)
       .map(Number);
+    const mins: number[] = (daily.temperature_2m_min ?? [])
+      .slice(0, 3)
+      .map(Number);
+    const dayCodes: number[] = (daily.weather_code ?? [])
+      .slice(0, 3)
+      .map(Number);
     const tempC = units === "F" ? ((value - 32) * 5) / 9 : value;
     const tempF = units === "F" ? value : (value * 9) / 5 + 32;
     const body = {
       tempC: Math.round(tempC * 10) / 10,
       tempF: Math.round(tempF * 10) / 10,
+      weatherCode: code,
       condition: conditionForCode(code),
-      forecast: maxes.map((m) => `${Math.round(m)}°`),
+      forecast: dayCodes.map((c, i) => ({
+        code: c,
+        condition: conditionForCode(c),
+        maxC: units === "F" ? ((maxes[i] - 32) * 5) / 9 : maxes[i],
+        maxF: units === "F" ? maxes[i] : (maxes[i] * 9) / 5 + 32,
+        minC: units === "F" ? ((mins[i] - 32) * 5) / 9 : mins[i],
+        minF: units === "F" ? mins[i] : (mins[i] * 9) / 5 + 32,
+      })),
     };
     logRequest({ ip, endpoint: "weather", status: 200, ms: Date.now() - start });
     void appendAccessLog({ ts: Date.now(), ip, endpoint: "weather", status: 200, ms: Date.now() - start });
