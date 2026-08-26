@@ -43,3 +43,7 @@ coverage/
 playwright-report/
 test-results/
 playwright/.cache/
+
+# Surgical-Pruning toolkit output (plan + manifest + audit)
+.prune/
+surgical-pruning-*.html
