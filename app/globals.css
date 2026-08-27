@@ -2014,6 +2014,10 @@ p + p {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+  /* Splash: keep the overlay itself un-animated, but do NOT collapse the
+     video into nothing — the splash is the motion the user opted out of,
+     not the rest of the app's chrome. Component also early-returns. */
+  .splash-overlay { animation: none !important; }
 }
 
 /* Splash overlay (international, plays once/session) */
