@@ -17,7 +17,7 @@ class SettingsSections {
       // 1. Appearance
       SectionHeader(title: l10n.sectionAppearance),
       DropdownButtonFormField<String>(
-        value: s.themeMode,
+        initialValue: s.themeMode,
         items: [
           DropdownMenuItem(value: 'system', child: Text(l10n.themeSystem)),
           DropdownMenuItem(value: 'light', child: Text(l10n.themeLight)),
@@ -27,7 +27,7 @@ class SettingsSections {
         decoration: InputDecoration(labelText: l10n.settingTheme),
       ),
       DropdownButtonFormField<String>(
-        value: s.language,
+        initialValue: s.language,
         items: [
           DropdownMenuItem(value: 'en', child: Text(l10n.langEnglish)),
           DropdownMenuItem(value: 'th', child: Text(l10n.langThai)),

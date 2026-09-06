@@ -46,3 +46,6 @@ app.*.map.json
 
 # Flutter DevTools generated settings
 /devtools_options.yaml
+
+# V2 surgical-implementation audit scratch dir (skill-mandated)
+docs/.scratch-audit/
