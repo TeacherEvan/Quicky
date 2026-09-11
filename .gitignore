@@ -49,3 +49,4 @@ app.*.map.json
 
 # V2 surgical-implementation audit scratch dir (skill-mandated)
 docs/.scratch-audit/
+docs/.scratch-audit/
