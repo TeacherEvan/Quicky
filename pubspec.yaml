@@ -53,10 +53,9 @@ dependencies:
 
   # Image picker for location feature
   image_picker: ^1.2.0
-
-dev_dependencies:
   flutter_localizations:
     sdk: flutter
+
   flutter_test:
     sdk: flutter
   mocktail: ^1.0.0

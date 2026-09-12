@@ -25,16 +25,17 @@ class BoltService {
   /// Launches BOLT if installed. Returns false if not installed.
   Future<bool> launch() async {
     if (!await isInstalled()) return false;
-    // Android: intent with package opens that specific installed app.
-    final uri = Uri.parse('${scheme}home');
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-      return true;
-    }
-    // Fallback: package-only intent (Android).
+    // Package id is the authoritative installed-check target (verified Play
+    // Store value); the scheme is community-reported and unverified, so try
+    // the package intent first and only fall back to the scheme.
     final pkgUri = Uri.parse('package:$packageId');
     if (await canLaunchUrl(pkgUri)) {
       await launchUrl(pkgUri, mode: LaunchMode.externalApplication);
+      return true;
+    }
+    final schemeUri = Uri.parse('${scheme}home');
+    if (await canLaunchUrl(schemeUri)) {
+      await launchUrl(schemeUri, mode: LaunchMode.externalApplication);
       return true;
     }
     return false;

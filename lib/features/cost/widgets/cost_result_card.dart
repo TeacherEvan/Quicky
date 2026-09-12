@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:quicky/core/l10n/app_localizations.dart';
+
 
 /// Result card for the Cost Translator: captured image + Thai phrase + copy.
 class CostResultCard extends StatelessWidget {
@@ -23,8 +25,8 @@ class CostResultCard extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                imagePath,
+              child: Image.file(
+                File(imagePath),
                 width: 72,
                 height: 72,
                 fit: BoxFit.cover,

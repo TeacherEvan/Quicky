@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:quicky/core/l10n/app_localizations.dart';
 import 'package:quicky/features/location/location_controller.dart';
 import 'package:quicky/features/location/services/geocode_service.dart';
+
 
 /// Location Finder page: camera or gallery image, then a Thai place label.
 class LocationPage extends ConsumerStatefulWidget {
@@ -83,8 +85,8 @@ class _LocationPageState extends ConsumerState<LocationPage> {
                       return CameraPreview(_controller!);
                     },
                   )
-                : Image.network(
-                    state.imagePath!,
+                : Image.file(
+                    File(state.imagePath!),
                     fit: BoxFit.cover,
                     errorBuilder: (_, __, ___) =>
                         const Center(child: Icon(Icons.image, size: 80)),

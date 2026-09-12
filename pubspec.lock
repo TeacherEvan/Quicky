@@ -271,7 +271,7 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_localizations:
-    dependency: "direct dev"
+    dependency: "direct main"
     description: flutter
     source: sdk
     version: "0.0.0"
@@ -340,7 +340,7 @@ packages:
     source: hosted
     version: "4.2.2"
   flutter_test:
-    dependency: "direct dev"
+    dependency: "direct main"
     description: flutter
     source: sdk
     version: "0.0.0"
@@ -678,7 +678,7 @@ packages:
     source: hosted
     version: "2.0.0"
   mocktail:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: mocktail
       sha256: "5e1bf53cc7baa8062a33b84424deb61513858ea05c601b8509e683815b5914aa"
@@ -1091,7 +1091,7 @@ packages:
     source: hosted
     version: "2.2.0"
   very_good_analysis:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: very_good_analysis
       sha256: "1fb637c0022034b1f19ea2acb42a3603cbd8314a470646a59a2fb01f5f3a8629"
