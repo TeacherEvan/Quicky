@@ -10,9 +10,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
   final lang = prefs.getString('settings_lang') ?? 'en';
-  runApp(ProviderScope(
-    child: QuickyApp(locale: Locale(lang)),
-  ));
+  runApp(ProviderScope(child: QuickyApp(locale: Locale(lang))));
 }
 
 class QuickyApp extends StatelessWidget {
